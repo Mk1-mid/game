@@ -19,7 +19,7 @@ def cargar_usuarios():
         # Si no existe, crear archivo con usuario de prueba
         usuarios_default = {"admin": "123"}
         guardar_usuarios(usuarios_default)
-        print("✓ Archivo users.json creado.")
+        print("Archivo users.json creado.")
         return usuarios_default
 
 def guardar_usuarios(users_db):
@@ -38,7 +38,7 @@ def _hacer_registro(db):
     user = input("Nuevo nombre de usuario: ").strip()
     
     if not user:
-        print("❌ El nombre no puede estar vacío.")
+        print("El nombre no puede estar vacio.")
         return
     
     # Validamos si el usuario ya existe
@@ -48,11 +48,11 @@ def _hacer_registro(db):
         passw = input("Nueva contraseña: ").strip()
         
         if not passw:
-            print("❌ La contraseña no puede estar vacía.")
+            print("La contrasena no puede estar vacia.")
             return
         
         db[user] = passw
-        guardar_usuarios(db)  # ⭐ NUEVO: Guardar en JSON
+        guardar_usuarios(db)  #  NUEVO: Guardar en JSON
         print(f"Usuario {user} registrado con éxito!")
 
 def _hacer_login(db):
@@ -75,7 +75,7 @@ def _hacer_login(db):
         if user in db:
             # 2. Si existe, revisamos si la contraseña es correcta
             if db[user] == passw:
-                print(f"\n¡Bienvenido de vuelta, {user}!")
+                print(f"\nBienvenido de vuelta, {user}!")
                 return user  # Éxito
             else:
                 print("Contraseña incorrecta.")
@@ -130,10 +130,10 @@ def cargar_partida(username):
     if os.path.exists(filename):
         try:
             with open(filename, 'r', encoding='utf-8') as file:
-                print(f"✓ Partida guardada encontrada para {username}")
+                print(f"Partida guardada encontrada para {username}")
                 return json.load(file)
         except json.JSONDecodeError:
-            print("⚠️  Archivo de guardado corrupto. Iniciando nueva partida...")
+            print("Archivo de guardado corrupto. Iniciando nueva partida...")
             return None
     return None
 
@@ -144,7 +144,7 @@ def guardar_partida(username, datos_partida):
     with open(filename, 'w', encoding='utf-8') as file:
         json.dump(datos_partida, file, indent=4, ensure_ascii=False)
     
-    print(f"💾 Partida guardada exitosamente.")
+    print(f"Partida guardada exitosamente.")
 
 def crear_nueva_partida():
     """Crea datos iniciales de una nueva partida"""
