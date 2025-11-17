@@ -1,7 +1,8 @@
 import random
 
 # --- FUNCIONES ---
-def combate_arena(salud_jugador, daño_jugador, velocidad_jugador, salud_enemigo, daño_enemigo, velocidad_enemigo, daño_base):
+def combate_arena(salud_jugador, daño_jugador, velocidad_jugador, defensa_jugador,
+                  salud_enemigo, daño_enemigo, velocidad_enemigo, defensa_enemigo, daño_base):
     
     salud_simulada_jugador = salud_jugador
     salud_simulada_enemigo = salud_enemigo
@@ -19,7 +20,7 @@ def combate_arena(salud_jugador, daño_jugador, velocidad_jugador, salud_enemigo
         
         if jugador_primero:
             # Jugador ataca
-            daño_infligido = calcular_daño(daño_jugador)
+            daño_infligido = calcular_daño(daño_jugador, defensa_enemigo)
             salud_simulada_enemigo -= daño_infligido
             print(f"  Tu gladiador ataca con {daño_infligido} de daño")
             print(f"   Salud enemiga: {salud_simulada_enemigo} HP")
@@ -32,7 +33,7 @@ def combate_arena(salud_jugador, daño_jugador, velocidad_jugador, salud_enemigo
             input("   Presiona ENTER para continuar")
 
             # Enemigo ataca
-            daño_recibido = calcular_daño(daño_enemigo)
+            daño_recibido = calcular_daño(daño_enemigo, defensa_jugador)
             salud_simulada_jugador -= daño_recibido
             print(f"  El enemigo ataca con {daño_recibido} de daño")
             print(f"   Tu salud: {salud_simulada_jugador} HP")
@@ -43,7 +44,7 @@ def combate_arena(salud_jugador, daño_jugador, velocidad_jugador, salud_enemigo
                 break
         else:
             # Enemigo ataca
-            daño_recibido = calcular_daño(daño_enemigo)
+            daño_recibido = calcular_daño(daño_enemigo, defensa_jugador)
             salud_simulada_jugador -= daño_recibido
             print(f"  El enemigo ataca con {daño_recibido} de daño")
             print(f"   Tu salud: {salud_simulada_jugador} HP")
@@ -56,9 +57,9 @@ def combate_arena(salud_jugador, daño_jugador, velocidad_jugador, salud_enemigo
             input("   Presiona ENTER para continuar")
 
             # Jugador ataca
-            daño_infligido = calcular_daño(daño_jugador)
+            daño_infligido = calcular_daño(daño_jugador, defensa_enemigo)
             salud_simulada_enemigo -= daño_infligido
-            print(f"⚔️  Tu gladiador ataca con {daño_infligido} de daño")
+            print(f"  Tu gladiador ataca con {daño_infligido} de daño")
             print(f"   Salud enemiga: {salud_simulada_enemigo} HP")
             
             if salud_simulada_enemigo <= 0:
@@ -86,19 +87,25 @@ def combate_arena(salud_jugador, daño_jugador, velocidad_jugador, salud_enemigo
         salud_jugador = 1
     
     print(f"Salud actual: {salud_jugador} HP")
-
     
     input("Presiona ENTER para continuar")
     
     return salud_jugador, victoria
 
 
-def calcular_daño(daño_base):
-    """Calcula daño con variación random ±20%"""
-    variacion = int(daño_base * 0.2)  # 20% de variación
+def calcular_daño(daño_base, defensa_objetivo=0):
+    """Calcula daño con variación random ±20% y reducción por defensa (50% efectiva)"""
+    variacion = int(daño_base * 0.2)
     daño_min = daño_base - variacion
     daño_max = daño_base + variacion
-    return random.randint(daño_min, daño_max)
+    daño_random = random.randint(daño_min, daño_max)
+    
+    # Defensa bloquea solo el 50% de su valor
+    reduccion = int(defensa_objetivo * 0.5)
+    daño_final = daño_random - reduccion
+    
+    # Daño mínimo de 1
+    return max(1, daño_final)
 
 
 def curar_en_base(salud_jugador, vida_maxima, cantidad_cura):
