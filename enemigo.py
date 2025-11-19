@@ -45,7 +45,7 @@ class EnemyVariant(Character):
     def __init__(self, nombre, hp, attack, deffense, speed):
         super().__init__(hp, attack, deffense, speed)
         self.nombre = nombre
-        self.tipo_base = nombre  # Guardar tipo original
+        self.tipo_base = nombre
 
 class Murmillo(EnemyVariant):
     """Gladiador pesado - Alto HP y defensa, lento"""
@@ -145,7 +145,7 @@ def generar_enemigo(numero_victoria):
     # 20% chance de campeón si tienes más de 3 victorias
     if numero_victoria >= 3 and random.random() < 0.2:
         enemigo = Champion()
-        enemigo.nombre = f" {generar_nombre_gladiador()} ⚔️"
+        enemigo.nombre = f"⚔️ {generar_nombre_gladiador()} ⚔️"
         enemigo.weapon = random.choice(ARMAS_ENEMIGAS)
         enemigo.armor = random.choice(ARMADURAS_ENEMIGAS)
         return enemigo, True
@@ -168,26 +168,37 @@ def generar_enemigo(numero_victoria):
     if numero_victoria >= 5:
         if random.random() < 0.6:
             enemigo.weapon = random.choice(ARMAS_ENEMIGAS)
-            print(f"     Porta {enemigo.weapon.nombre}!")
+            print(f"       ⚔️  Porta {enemigo.weapon.nombre}!")
         
         if random.random() < 0.4:
             enemigo.armor = random.choice(ARMADURAS_ENEMIGAS)
-            print(f"     Viste {enemigo.armor.nombre}!")
+            print(f"       🛡️  Viste {enemigo.armor.nombre}!")
     
     return enemigo, False
 
 def mostrar_info_enemigo(enemigo, es_campeon):
     """Muestra información detallada del enemigo"""
+    print("\n  ╔════════════════════════════════════════╗")
     if es_campeon:
-        print("     ¡¡¡HA ENTRADO EL CAMPEÓN !!!")
-    print(f"    {enemigo.nombre}")
-    print(f"     HP: {enemigo.hp_final()}")
-    print(f"     ATK: {enemigo.ataque_final()}")
-    print(f"     DEF: {enemigo.defensa_final()}")
-    print(f"    VEL: {enemigo.velocidad_final()}")
+        print("  ║    ⚠️  ¡¡¡HA ENTRADO EL CAMPEÓN !!!    ║")
+    else:
+        print("  ║         🎭 TU OPONENTE 🎭              ║")
+    print("  ╠════════════════════════════════════════╣")
+    print(f"    tu enemigo es:\n    {enemigo.nombre:<29}")
+    print("  ╠════════════════════════════════════════╣")
+    print(f"  ║  ❤️  HP:       {enemigo.hp_final():>3}                      ║")
+    print(f"  ║  ⚔️  Ataque:   {enemigo.ataque_final():>3}                      ║")
+    print(f"  ║  🛡️  Defensa:  {enemigo.defensa_final():>3}                      ║")
+    print(f"  ║  ⚡ Velocidad: {enemigo.velocidad_final():>3}                     ║")
     
-    if enemigo.weapon:
-        print(f"   Arma: {enemigo.weapon.nombre} (+{enemigo.weapon.attack} ATK)")
-    if enemigo.armor:
-        print(f"   Armadura: {enemigo.armor.nombre} (+{enemigo.armor.deffense} DEF)")
+    if enemigo.weapon or enemigo.armor:
+        print("  ╠════════════════════════════════════════╣")
+        print("  ║         🎒 EQUIPAMIENTO 🎒             ║")
+        if enemigo.weapon:
+            print(f"  ║  ⚔️  {enemigo.weapon.nombre:<31}║")
+            print(f"  ║      └─ ATK: +{enemigo.weapon.attack}                      ║")
+        if enemigo.armor:
+            print(f"  ║  🛡️  {enemigo.armor.nombre:<31}║")
+            print(f"  ║      └─ DEF: +{enemigo.armor.deffense}                      ║")
     
+    print("  ╚════════════════════════════════════════╝")

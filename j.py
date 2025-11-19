@@ -101,11 +101,11 @@ def mostrar_menu_autenticacion():
         print("\n" + "="*30)
         print("     MENU DE ACCESO")
         print("="*30)
-        print("1. Iniciar Sesión")
-        print("2. Registrarse")
-        print("3. Salir del Juego")
+        print("     1. Iniciar Sesión")
+        print("     2. Registrarse")
+        print("     3. Salir del Juego")
         print("="*30)
-        opcion = input("Elige una opción: ").strip()
+        opcion = input("    Elige una opción: ").strip()
 
         if opcion == "1":
             usuario_logueado = _hacer_login(users_db)

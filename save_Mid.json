@@ -1,0 +1,10 @@
+{
+    "dinero": 1050,
+    "salud_jugador": 85,
+    "vida_maxima": 100,
+    "victorias": 1,
+    "derrotas": 0,
+    "inventario_armas": [],
+    "arma_equipada": null,
+    "armadura_equipada": null
+}

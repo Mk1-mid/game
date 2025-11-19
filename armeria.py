@@ -27,16 +27,21 @@ precios = {
 def mostrar_catalogo():
     """Muestra el catálogo de items disponibles"""
     print("""
-╔═══════════════════════════════════════════════════════════════╗
-║                    ⚔️ ARMERÍA DISPONIBLE ⚔️                     ║
-╠═══════════════════════════════════════════════════════════════╣
-║   1. ESPADA RIDIUS        | PRECIO: 300 | DAÑO: 20 | VEL: 0   ║
-║   2. ESPADA GLADIUS       | PRECIO: 200 | DAÑO: 15 | VEL: 0   ║
-║   3. HACHA DE POMPEYA     | PRECIO: 150 | DAÑO: 5  | VEL: 5   ║
-║   4. ESCUDO IMPERIAL      | PRECIO: 200 | DEF: 10  | HP: 0    ║
-║   5. ARMADURA ESPARTANA   | PRECIO: 300 | DEF: 20  | HP: 0    ║
-║   6. ARMADURA ACORAZADA   | PRECIO: 350 | DEF: 25  | HP: 0    ║
-╚═══════════════════════════════════════════════════════════════╝
+╔══════════════════════════════════════════════════════════════╗
+║                  ⚔️  ARMERÍA DISPONIBLE  ⚔️                    ║
+╠══════════════════════════════════════════════════════════════╣
+║                         ⚔️  ARMAS  ⚔️                          ║
+╠══════════════════════════════════════════════════════════════╣
+║  1. ESPADA RIDIUS       │ 300g │ ATK: 20 │ VEL: 0            ║
+║  2. ESPADA GLADIUS      │ 200g │ ATK: 15 │ VEL: 0            ║
+║  3. HACHA DE POMPEYA    │ 150g │ ATK:  5 │ VEL: 5            ║
+╠══════════════════════════════════════════════════════════════╣
+║                       🛡️  ARMADURAS  🛡️                        ║
+╠══════════════════════════════════════════════════════════════╣
+║  4. ESCUDO IMPERIAL     │ 200g │ DEF: 10 │ HP:  0            ║
+║  5. ARMADURA ESPARTANA  │ 300g │ DEF: 20 │ HP:  0            ║
+║  6. ARMADURA ACORAZADA  │ 350g │ DEF: 25 │ HP:  0            ║
+╚══════════════════════════════════════════════════════════════╝
     """)
 
 def comprar_item(opcion, dinero, inventario):
@@ -45,14 +50,15 @@ def comprar_item(opcion, dinero, inventario):
     Retorna: (dinero_actualizado, inventario_actualizado, item_comprado o None)
     """
     if opcion not in precios:
-        print("\nOpcion invalida!")
+        print("\n  ❌ Opción inválida!")
         return dinero, inventario, None
     
     precio = precios[opcion]
     
     # Verificar si tiene dinero
     if dinero < precio:
-        print(f"\n ¡NO TIENES DINERO SUFICIENTE! Te faltan {precio - dinero} monedas.")
+        print(f"\n  ⚠️  ━━━ NO TIENES SUFICIENTE DINERO ━━━")
+        print(f"      Te faltan {precio - dinero}g")
         return dinero, inventario, None
     
     # Obtener el item
@@ -63,19 +69,20 @@ def comprar_item(opcion, dinero, inventario):
         item = catalogo_armaduras[opcion]
         tipo = "armadura"
     
-    print(f"\nHas elegido: {item.nombre}!")
-    print(f"Precio: {precio} monedas de oro")
+    print(f"\n  ┌────────────────────────────────────┐")
+    print(f"  │  Has elegido: {item.nombre:<20} │")
+    print(f"  │  Precio: {precio}g{' ' * (25 - len(str(precio)))}│")
+    print(f"  └────────────────────────────────────┘")
     
-    confirmacion = input("\n¿Confirmar compra? (s/n): ").strip().lower()
+    confirmacion = input("\n  ¿Confirmar compra? (s/n): ").strip().lower()
     
     if confirmacion != "s":
-        print("\n¡Compra cancelada!")
+        print("\n  🚫 Compra cancelada!")
         return dinero, inventario, None
     
-    # Realizar compra - GUARDAR SOLO DATOS, NO EL OBJETO
+    # Realizar compra
     dinero -= precio
     
-    # ✅ CORRECCIÓN: Guardar datos serializables en vez del objeto
     if tipo == "arma":
         inventario.append({
             "tipo": "arma",
@@ -93,17 +100,19 @@ def comprar_item(opcion, dinero, inventario):
             "precio": precio
         })
     
-    print(f"\n{item.nombre} anadido al inventario!")
-    print(f"Dinero restante: {dinero} monedas")
+    print(f"\n  ✓ {item.nombre} añadido al inventario!")
+    print(f"  💰 Dinero restante: {dinero}g")
     
     return dinero, inventario, item
 
 def mostrar_inventario(inventario):
     """Muestra el inventario del jugador"""
-    print("\n=======  INVENTARIO  =======")
+    print("\n  ╔════════════════════════════════════╗")
+    print("  ║       📦 INVENTARIO 📦             ║")
+    print("  ╚════════════════════════════════════╝")
     
     if len(inventario) == 0:
-        print("\n¡¡ NO TIENES NADA EN EL INVENTARIO !!")
+        print("\n  ⚠️  Tu inventario está vacío")
         return
     
     for i, elemento in enumerate(inventario, 1):
@@ -111,22 +120,24 @@ def mostrar_inventario(inventario):
         nombre = elemento["nombre"]
         
         if tipo == "arma":
-            print(f"{i}. {nombre} - ATK: +{elemento['attack']}, VEL: +{elemento['speed']}")
+            print(f"  {i}. ⚔️  {nombre}")
+            print(f"      └─ ATK: +{elemento['attack']} | VEL: +{elemento['speed']}")
         else:
-            print(f"{i}. {nombre} - DEF: +{elemento['deffense']}, HP: +{elemento['hp']}")
+            print(f"  {i}. 🛡️  {nombre}")
+            print(f"      └─ DEF: +{elemento['deffense']} | HP: +{elemento['hp']}")
 
 def equipar_item(inventario, gladiador):
     """Permite equipar un item del inventario al gladiador"""
     if len(inventario) == 0:
-        print("\n No tienes items para equipar.")
+        print("\n  ⚠️  No tienes items para equipar.")
         return
     
     mostrar_inventario(inventario)
     
     try:
-        opcion = int(input("\n¿Qué item deseas equipar? (número): "))
+        opcion = int(input("\n  ➤ ¿Qué item deseas equipar? (número): "))
         if opcion < 1 or opcion > len(inventario):
-            print("\n Opción inválida.")
+            print("\n  ❌ Opción inválida.")
             return
         
         elemento = inventario[opcion - 1]
@@ -137,25 +148,27 @@ def equipar_item(inventario, gladiador):
             item = Weapon(elemento["nombre"], elemento["attack"], elemento["speed"])
             
             if gladiador.weapon:
-                print(f"\n Ya tienes equipada: {gladiador.weapon.nombre}")
-                print("¿Deseas reemplazarla? (s/n): ", end="")
-                if input().strip().lower() != "s":
+                print(f"\n  ⚠️  Ya tienes equipada: {gladiador.weapon.nombre}")
+                confirmar = input("  ¿Deseas reemplazarla? (s/n): ").strip().lower()
+                if confirmar != "s":
+                    print("\n  🚫 Equipo cancelado")
                     return
             gladiador.weapon = item
-            print(f"\n✓ ¡{item.nombre} equipada como arma!")
+            print(f"\n  ✓ ¡{item.nombre} equipada como arma!")
         else:
             item = Armor(elemento["nombre"], elemento["deffense"], elemento["hp"])
             
             if gladiador.armor:
-                print(f"\n Ya tienes equipada: {gladiador.armor.nombre}")
-                print("¿Deseas reemplazarla? (s/n): ", end="")
-                if input().strip().lower() != "s":
+                print(f"\n  ⚠️  Ya tienes equipada: {gladiador.armor.nombre}")
+                confirmar = input("  ¿Deseas reemplazarla? (s/n): ").strip().lower()
+                if confirmar != "s":
+                    print("\n  🚫 Equipo cancelado")
                     return
             gladiador.armor = item
-            print(f"\n✓ ¡{item.nombre} equipada como armadura!")
+            print(f"\n  ✓ ¡{item.nombre} equipada como armadura!")
             
     except ValueError:
-        print("\n Ingresa un número válido.")
+        print("\n  ❌ Ingresa un número válido.")
 
 def menu_armeria(dinero, inventario, gladiador):
     """
@@ -163,20 +176,22 @@ def menu_armeria(dinero, inventario, gladiador):
     Retorna: (dinero_actualizado, inventario_actualizado)
     """
     while True:
-        print("\n\n               ARMERIA")
-        print(f"\n DINERO DISPONIBLE: {dinero} monedas de oro")
-        print("""
-        1. COMPRAR
-        2. INVENTARIO
-        3. EQUIPAR
-        4. SALIR
-        """)
+        print("\n╔════════════════════════════════════════╗")
+        print("║          🗡️  ARMERÍA  🗡️                 ║")
+        print("╚════════════════════════════════════════╝")
+        print(f"  💰 Dinero disponible: {dinero}g")
+        print("\n  ┌────────────────────┐")
+        print("  │  1. 💳 COMPRAR     │")
+        print("  │  2. 📦 INVENTARIO  │")
+        print("  │  3. ⚔️  EQUIPAR     │")
+        print("  │  4. 🚪 SALIR       │")
+        print("  └────────────────────┘")
         
-        opcion = input("Que deseas hacer? (1-4): ").strip()
+        opcion = input("\n  ➤ ¿Qué deseas hacer? (1-4): ").strip()
         
         if opcion == "1":
             mostrar_catalogo()
-            item_opcion = input("\nEscoge un item (1-6) o '0' para cancelar: ").strip()
+            item_opcion = input("\n  ➤ Escoge un item (1-6) o '0' para cancelar: ").strip()
             
             if item_opcion == "0":
                 continue
@@ -190,9 +205,9 @@ def menu_armeria(dinero, inventario, gladiador):
             equipar_item(inventario, gladiador)
             
         elif opcion == "4":
-            print("\nHasta pronto, gladiador!")
+            print("\n  👋 ¡Hasta pronto, gladiador!")
             break
         else:
-            print("\nOpcion invalida. Intenta de nuevo.")
+            print("\n  ❌ Opción inválida. Intenta de nuevo.")
     
     return dinero, inventario
