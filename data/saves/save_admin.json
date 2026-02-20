@@ -1,0 +1,75 @@
+{
+    "dinero": 5000,
+    "literas": 2,
+    "espacios_totales": 4,
+    "gladiadores": [
+        {
+            "nombre": "Ferox",
+            "tipo": "Murmillo",
+            "nivel": 1,
+            "xp": 0,
+            "hp": 100,
+            "hp_actual": 100,
+            "attack": 20,
+            "defense": 5,
+            "agilidad": 10,
+            "fuerza": 25,
+            "critico": 11.5,
+            "esquiva": 5.0,
+            "estado": "sano",
+            "ocupacion": "disponible",
+            "dias_ocupado": 0,
+            "razon_ocupacion": null,
+            "combates_ganados": 0,
+            "combates_perdidos": 0,
+            "combates_totales": 0,
+            "dinero_generado": 0,
+            "weapon": null,
+            "armor": null,
+            "habilidades": {
+                "habilidades_activas": {},
+                "contadores_triggers": {
+                    "esquivas": 0,
+                    "criticos_recibidos": 0,
+                    "criticos_propios": 0,
+                    "daño_recibido": 0,
+                    "turnos": 0
+                }
+            }
+        },
+        {
+            "nombre": "Velox",
+            "tipo": "Retiarius",
+            "nivel": 1,
+            "xp": 0,
+            "hp": 100,
+            "hp_actual": 100,
+            "attack": 20,
+            "defense": 5,
+            "agilidad": 22,
+            "fuerza": 12,
+            "critico": 12.4,
+            "esquiva": 11.0,
+            "estado": "sano",
+            "ocupacion": "disponible",
+            "dias_ocupado": 0,
+            "razon_ocupacion": null,
+            "combates_ganados": 0,
+            "combates_perdidos": 0,
+            "combates_totales": 0,
+            "dinero_generado": 0,
+            "weapon": null,
+            "armor": null,
+            "habilidades": {
+                "habilidades_activas": {},
+                "contadores_triggers": {
+                    "esquivas": 0,
+                    "criticos_recibidos": 0,
+                    "criticos_propios": 0,
+                    "daño_recibido": 0,
+                    "turnos": 0
+                }
+            }
+        }
+    ]
+}
