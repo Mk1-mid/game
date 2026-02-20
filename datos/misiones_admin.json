@@ -1,0 +1,485 @@
+{
+  "misiones": {
+    "combate_1": {
+      "id": "combate_1",
+      "nombre": "Primer Paso",
+      "progreso": 0,
+      "objetivo": 1,
+      "estado": "activa",
+      "tipo": "combate",
+      "capa": "core",
+      "dificultad": "tier_1",
+      "recompensas": {
+        "dinero": 100,
+        "xp": 50,
+        "items": []
+      },
+      "mision_padre_id": null,
+      "misiones_hijo_ids": [],
+      "tiene_bonus": false,
+      "descripcion_bonus": null,
+      "bonus_extra_recompensa": 0
+    },
+    "combate_2": {
+      "id": "combate_2",
+      "nombre": "Sparring",
+      "progreso": 0,
+      "objetivo": 3,
+      "estado": "bloqueada",
+      "tipo": "combate",
+      "capa": "core",
+      "dificultad": "tier_1",
+      "recompensas": {
+        "dinero": 250,
+        "xp": 150,
+        "items": []
+      },
+      "mision_padre_id": null,
+      "misiones_hijo_ids": [],
+      "tiene_bonus": true,
+      "descripcion_bonus": "Gana 5 combates sin perder",
+      "bonus_extra_recompensa": 100
+    },
+    "combate_3": {
+      "id": "combate_3",
+      "nombre": "Champion Local",
+      "progreso": 0,
+      "objetivo": 10,
+      "estado": "bloqueada",
+      "tipo": "combate",
+      "capa": "core",
+      "dificultad": "tier_1",
+      "recompensas": {
+        "dinero": 500,
+        "xp": 300,
+        "items": []
+      },
+      "mision_padre_id": null,
+      "misiones_hijo_ids": [],
+      "tiene_bonus": false,
+      "descripcion_bonus": null,
+      "bonus_extra_recompensa": 0
+    },
+    "nivel_1": {
+      "id": "nivel_1",
+      "nombre": "Aprendiz",
+      "progreso": 0,
+      "objetivo": 3,
+      "estado": "bloqueada",
+      "tipo": "nivel",
+      "capa": "core",
+      "dificultad": "tier_1",
+      "recompensas": {
+        "dinero": 150,
+        "xp": 100,
+        "items": []
+      },
+      "mision_padre_id": null,
+      "misiones_hijo_ids": [],
+      "tiene_bonus": false,
+      "descripcion_bonus": null,
+      "bonus_extra_recompensa": 0
+    },
+    "nivel_2": {
+      "id": "nivel_2",
+      "nombre": "Veterano",
+      "progreso": 0,
+      "objetivo": 5,
+      "estado": "bloqueada",
+      "tipo": "nivel",
+      "capa": "core",
+      "dificultad": "tier_1",
+      "recompensas": {
+        "dinero": 300,
+        "xp": 200,
+        "items": []
+      },
+      "mision_padre_id": null,
+      "misiones_hijo_ids": [],
+      "tiene_bonus": false,
+      "descripcion_bonus": null,
+      "bonus_extra_recompensa": 0
+    },
+    "dinero_1": {
+      "id": "dinero_1",
+      "nombre": "Primeras Ganancias",
+      "progreso": 0,
+      "objetivo": 500,
+      "estado": "bloqueada",
+      "tipo": "dinero",
+      "capa": "core",
+      "dificultad": "tier_1",
+      "recompensas": {
+        "dinero": 200,
+        "xp": 100,
+        "items": []
+      },
+      "mision_padre_id": null,
+      "misiones_hijo_ids": [],
+      "tiene_bonus": false,
+      "descripcion_bonus": null,
+      "bonus_extra_recompensa": 0
+    },
+    "dinero_2": {
+      "id": "dinero_2",
+      "nombre": "Hombre Acaudalado",
+      "progreso": 0,
+      "objetivo": 1000,
+      "estado": "bloqueada",
+      "tipo": "dinero",
+      "capa": "core",
+      "dificultad": "tier_1",
+      "recompensas": {
+        "dinero": 500,
+        "xp": 250,
+        "items": []
+      },
+      "mision_padre_id": null,
+      "misiones_hijo_ids": [],
+      "tiene_bonus": false,
+      "descripcion_bonus": null,
+      "bonus_extra_recompensa": 0
+    },
+    "items_1": {
+      "id": "items_1",
+      "nombre": "Equipero",
+      "progreso": 0,
+      "objetivo": 5,
+      "estado": "bloqueada",
+      "tipo": "items",
+      "capa": "core",
+      "dificultad": "tier_1",
+      "recompensas": {
+        "dinero": 200,
+        "xp": 150,
+        "items": []
+      },
+      "mision_padre_id": null,
+      "misiones_hijo_ids": [],
+      "tiene_bonus": false,
+      "descripcion_bonus": null,
+      "bonus_extra_recompensa": 0
+    },
+    "items_2": {
+      "id": "items_2",
+      "nombre": "Coleccionista",
+      "progreso": 0,
+      "objetivo": 10,
+      "estado": "bloqueada",
+      "tipo": "items",
+      "capa": "core",
+      "dificultad": "tier_1",
+      "recompensas": {
+        "dinero": 400,
+        "xp": 300,
+        "items": []
+      },
+      "mision_padre_id": null,
+      "misiones_hijo_ids": [],
+      "tiene_bonus": false,
+      "descripcion_bonus": null,
+      "bonus_extra_recompensa": 0
+    },
+    "cadena_gloria_1": {
+      "id": "cadena_gloria_1",
+      "nombre": "La Gloria del Gladiador",
+      "progreso": 0,
+      "objetivo": 5,
+      "estado": "bloqueada",
+      "tipo": "combate",
+      "capa": "encadenada",
+      "dificultad": "tier_2",
+      "recompensas": {
+        "dinero": 750,
+        "xp": 500,
+        "items": []
+      },
+      "mision_padre_id": null,
+      "misiones_hijo_ids": [
+        "cadena_gloria_2"
+      ],
+      "tiene_bonus": false,
+      "descripcion_bonus": null,
+      "bonus_extra_recompensa": 0
+    },
+    "cadena_gloria_2": {
+      "id": "cadena_gloria_2",
+      "nombre": "Campeón Indiscutible",
+      "progreso": 0,
+      "objetivo": 25,
+      "estado": "bloqueada",
+      "tipo": "combate",
+      "capa": "encadenada",
+      "dificultad": "tier_2",
+      "recompensas": {
+        "dinero": 1500,
+        "xp": 1000,
+        "items": [
+          "espada_legendaria"
+        ]
+      },
+      "mision_padre_id": "cadena_gloria_1",
+      "misiones_hijo_ids": [],
+      "tiene_bonus": false,
+      "descripcion_bonus": null,
+      "bonus_extra_recompensa": 0
+    },
+    "cadena_poder_1": {
+      "id": "cadena_poder_1",
+      "nombre": "Ascenso Inicial",
+      "progreso": 0,
+      "objetivo": 10,
+      "estado": "bloqueada",
+      "tipo": "nivel",
+      "capa": "encadenada",
+      "dificultad": "tier_2",
+      "recompensas": {
+        "dinero": 500,
+        "xp": 400,
+        "items": []
+      },
+      "mision_padre_id": null,
+      "misiones_hijo_ids": [
+        "cadena_poder_2"
+      ],
+      "tiene_bonus": false,
+      "descripcion_bonus": null,
+      "bonus_extra_recompensa": 0
+    },
+    "cadena_poder_2": {
+      "id": "cadena_poder_2",
+      "nombre": "Leyenda Menor",
+      "progreso": 0,
+      "objetivo": 20,
+      "estado": "bloqueada",
+      "tipo": "nivel",
+      "capa": "encadenada",
+      "dificultad": "tier_3",
+      "recompensas": {
+        "dinero": 1000,
+        "xp": 800,
+        "items": [
+          "pocion_especial"
+        ]
+      },
+      "mision_padre_id": "cadena_poder_1",
+      "misiones_hijo_ids": [],
+      "tiene_bonus": false,
+      "descripcion_bonus": null,
+      "bonus_extra_recompensa": 0
+    },
+    "cadena_dinero_1": {
+      "id": "cadena_dinero_1",
+      "nombre": "Negociante",
+      "progreso": 0,
+      "objetivo": 5000,
+      "estado": "bloqueada",
+      "tipo": "dinero",
+      "capa": "encadenada",
+      "dificultad": "tier_2",
+      "recompensas": {
+        "dinero": 1000,
+        "xp": 600,
+        "items": []
+      },
+      "mision_padre_id": null,
+      "misiones_hijo_ids": [
+        "cadena_dinero_2"
+      ],
+      "tiene_bonus": false,
+      "descripcion_bonus": null,
+      "bonus_extra_recompensa": 0
+    },
+    "cadena_dinero_2": {
+      "id": "cadena_dinero_2",
+      "nombre": "Magnate Romano",
+      "progreso": 0,
+      "objetivo": 15000,
+      "estado": "bloqueada",
+      "tipo": "dinero",
+      "capa": "encadenada",
+      "dificultad": "tier_3",
+      "recompensas": {
+        "dinero": 2000,
+        "xp": 1000,
+        "items": [
+          "descuento_tienda"
+        ]
+      },
+      "mision_padre_id": "cadena_dinero_1",
+      "misiones_hijo_ids": [],
+      "tiene_bonus": false,
+      "descripcion_bonus": null,
+      "bonus_extra_recompensa": 0
+    },
+    "side_apuesta": {
+      "id": "side_apuesta",
+      "nombre": "La Apuesta del Ludópata",
+      "progreso": 0,
+      "objetivo": 3,
+      "estado": "bloqueada",
+      "tipo": "especial",
+      "capa": "secundaria",
+      "dificultad": "tier_2",
+      "recompensas": {
+        "dinero": 600,
+        "xp": 400,
+        "items": [
+          "pocion_especial"
+        ]
+      },
+      "mision_padre_id": null,
+      "misiones_hijo_ids": [],
+      "tiene_bonus": true,
+      "descripcion_bonus": "Gana 5 sin perder",
+      "bonus_extra_recompensa": 200
+    },
+    "side_coleccionista": {
+      "id": "side_coleccionista",
+      "nombre": "El Coleccionista",
+      "progreso": 0,
+      "objetivo": 1,
+      "estado": "bloqueada",
+      "tipo": "items",
+      "capa": "secundaria",
+      "dificultad": "tier_2",
+      "recompensas": {
+        "dinero": 800,
+        "xp": 500,
+        "items": [
+          "caja_sorpresa"
+        ]
+      },
+      "mision_padre_id": null,
+      "misiones_hijo_ids": [],
+      "tiene_bonus": false,
+      "descripcion_bonus": null,
+      "bonus_extra_recompensa": 0
+    },
+    "side_venganza": {
+      "id": "side_venganza",
+      "nombre": "Venganza",
+      "progreso": 0,
+      "objetivo": 1,
+      "estado": "bloqueada",
+      "tipo": "especial",
+      "capa": "secundaria",
+      "dificultad": "tier_2",
+      "recompensas": {
+        "dinero": 500,
+        "xp": 350,
+        "items": []
+      },
+      "mision_padre_id": null,
+      "misiones_hijo_ids": [],
+      "tiene_bonus": false,
+      "descripcion_bonus": null,
+      "bonus_extra_recompensa": 0
+    },
+    "side_ascetismo": {
+      "id": "side_ascetismo",
+      "nombre": "La Vida Austera",
+      "progreso": 0,
+      "objetivo": 5,
+      "estado": "bloqueada",
+      "tipo": "especial",
+      "capa": "secundaria",
+      "dificultad": "tier_1",
+      "recompensas": {
+        "dinero": 400,
+        "xp": 300,
+        "items": []
+      },
+      "mision_padre_id": null,
+      "misiones_hijo_ids": [],
+      "tiene_bonus": false,
+      "descripcion_bonus": null,
+      "bonus_extra_recompensa": 0
+    },
+    "auto_primer_victima": {
+      "id": "auto_primer_victima",
+      "nombre": "¡Primer Golpe!",
+      "progreso": 0,
+      "objetivo": 1,
+      "estado": "bloqueada",
+      "tipo": "combate",
+      "capa": "automatica",
+      "dificultad": "tier_1",
+      "recompensas": {
+        "dinero": 50,
+        "xp": 25,
+        "items": []
+      },
+      "mision_padre_id": null,
+      "misiones_hijo_ids": [],
+      "tiene_bonus": false,
+      "descripcion_bonus": null,
+      "bonus_extra_recompensa": 0
+    },
+    "auto_racha_10": {
+      "id": "auto_racha_10",
+      "nombre": "Racha Ganadora (x10)",
+      "progreso": 0,
+      "objetivo": 10,
+      "estado": "bloqueada",
+      "tipo": "combate",
+      "capa": "automatica",
+      "dificultad": "tier_2",
+      "recompensas": {
+        "dinero": 1000,
+        "xp": 600,
+        "items": [
+          "medal_oro"
+        ]
+      },
+      "mision_padre_id": null,
+      "misiones_hijo_ids": [],
+      "tiene_bonus": false,
+      "descripcion_bonus": null,
+      "bonus_extra_recompensa": 0
+    },
+    "auto_comeback": {
+      "id": "auto_comeback",
+      "nombre": "¡Comeback!",
+      "progreso": 0,
+      "objetivo": 1,
+      "estado": "bloqueada",
+      "tipo": "especial",
+      "capa": "automatica",
+      "dificultad": "tier_2",
+      "recompensas": {
+        "dinero": 300,
+        "xp": 200,
+        "items": []
+      },
+      "mision_padre_id": null,
+      "misiones_hijo_ids": [],
+      "tiene_bonus": false,
+      "descripcion_bonus": null,
+      "bonus_extra_recompensa": 0
+    },
+    "auto_nivel_up": {
+      "id": "auto_nivel_up",
+      "nombre": "¡Evolución!",
+      "progreso": 0,
+      "objetivo": 999,
+      "estado": "bloqueada",
+      "tipo": "nivel",
+      "capa": "automatica",
+      "dificultad": "tier_1",
+      "recompensas": {
+        "dinero": 100,
+        "xp": 50,
+        "items": []
+      },
+      "mision_padre_id": null,
+      "misiones_hijo_ids": [],
+      "tiene_bonus": false,
+      "descripcion_bonus": null,
+      "bonus_extra_recompensa": 0
+    }
+  },
+  "activas": [],
+  "completadas": [],
+  "timestamp": "2026-01-19 21:32:39.051476"
+}
