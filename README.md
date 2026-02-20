@@ -1,52 +1,71 @@
 # ⚔️ SANGRE POR FORTUNA - Simulador de Gladiadores Romanos
 
-**Versión:** 2.2.1 (Hotfix - Correcciones de Balance) | **Estado:** ✅ Producción Estable
+**Versión:** 3.0 | **Estado:** 🔄 Fase 3 (El Alma del Juego) - 75% Completada
 
-Simulador de gladiadores en la antigua Roma escrito en **Python puro**. Gestiona tu equipo de gladiadores, compra equipo, combate en la arena, acumula riquezas y observa su progresión a través de múltiples niveles.
+Simulador de gladiadores en la antigua Roma escrito en **Python puro**. Gestiona tu equipo de gladiadores, combate en la arena, acumula riquezas y ¡observa historias narrativas desarrollarse en tu ludus!
 
 ---
 
 ## 📚 DOCUMENTACIÓN
 
-**👉 PUNTO DE ENTRADA:** [DOCUMENTACION.md](DOCUMENTACION.md)
+**👉 PUNTO DE ENTRADA:** [docs/INDICE.md](docs/INDICE.md)
 
 Desde ahí accedes a toda la documentación organizada de forma clara.
 
 ### Acceso Rápido
 - **Nuevo en el proyecto?** → [docs/COMIENZA_AQUI.md](docs/COMIENZA_AQUI.md)
-- **Quieres detalles técnicos?** → [docs/TECNICA.md](docs/TECNICA.md)
-- **Ver estado actual?** → [docs/REPORTE_MAESTRO.md](docs/REPORTE_MAESTRO.md)
-- **Índice completo?** → [docs/INDICE.md](docs/INDICE.md)
+- **Desarrollador?** → [docs/ARQUITECTURA.md](docs/ARQUITECTURA.md)
+- **Qué cambió?** → [CHANGELOG.md](CHANGELOG.md)
+- **Planes futuros?** → [docs/roadmap-sangre-fortuna.md](docs/roadmap-sangre-fortuna.md)
 
 ---
 
 ## 🎮 Características Principales
 
-### ✅ Sistema de Progresión (NUEVO en v2.0)
-- Sistema de Experiencia y Niveles logarítmico
-- Cada gladiador progresa independientemente
-- Stats que escalan dinámicamente (HP, ATK, DEF, SPD)
-- Múltiples subidas de nivel por combate posible
-- Fórmula balanceada: XP_requerido = 100 * (1.1 ^ nivel)
+### ✅ Fase 1-2: Motor y Mec. Core (100% Completadas)
 
-### ✅ Sistema de Equipo
-- Gestiona hasta 6 gladiadores simultáneamente
-- Cada uno con estado, ocupación y historial propios
-- 5 tipos de arquetipos (Murmillo, Retiarius, Secutor, Thraex, Hoplomachus)
-- Pueden estar: disponibles, en entrenamiento, en curación o muertos
+**Sistema de Progresión**
+- Experiencia y Niveles (XP scaling: 100 * 1.1^nivel)
+- Stats dinámicos que escalan con cada nivel
+- 5 arquetipos con habilidades especiales
 
-### ✅ Combate y Recompensas
-- Sistema de combate automático por turnos
-- Generación dinámica de enemigos escalados por nivel
-- Recompensas variables según dificultad (oro + XP)
-- Penalización real por derrota (daño + pérdida de recursos)
+**Combate y Recompensas**
+- Combate turn-based por turnos
+- 4 Dificultades de Arena (Novato-Legendaria)
+- Enemigos escalados dinámicamente
+- Recompensas proporcionales a dificultad
 
-### ✅ Sistema Heredado
-- Autenticación (registro/login)
-- Guardado de partidas persistente
-- Nombres romanos aleatorios
-- Sistema de tienda/armería
-- Equipamiento de armas y armaduras
+**Sistemas Secundarios**
+- Autenticación y guardado persistente
+- Tienda, armería y mercado
+- Misiones automáticas
+- Ligas competitivas
+
+### 🆕 Fase 3: El Alma (75% Completada - **NUEVO**)
+
+**🎭 Motor de Narrativa**
+- 12 eventos únicos (Festival, Rebelión, Patrocinio, etc.)
+- 80+ resultados posibles basados en decisiones
+- Probabilidades ponderadas según estado del equipo
+
+**⭐ Sistema de Fama y Reputación**
+- Atributo `fama` en Gladiador y Equipo
+- Ganancia/pérdida automática en arena
+- Desbloquea eventos especiales y mejores precios
+
+**⏳ Paso del Tiempo (Días)**
+- Opción 8: "Pasar Día" en menú principal
+- Recuperación pasiva de HP
+- Procesamiento automático de eventos narrativos
+- Efectos temporales (buffs/debuffs)
+
+**Ejemplo de Evento:**
+```
+Festival de Gladiadores
+"Se aproxima un evento importante..."
+├─ Participar → +Fama, posible herida
+└─ Descansar → Sin cambios
+```
 
 ## 🚀 Inicio Rápido
 

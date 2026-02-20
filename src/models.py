@@ -231,6 +231,10 @@ class Gladiador(Character):
         self.dias_ocupado = 0  # Cuántos días falta para disponible
         self.razon_ocupacion = None  # "entrenamiento", "curacion"
         
+        # ⭐ NUEVO: SISTEMA DE NARRATIVA (Fase 3.3)
+        self.efectos_activos = []  # Listado de diccionarios con efectos temporales
+        self.fama = 0  # Reputación individual del gladiador
+        
         # Historial
         self.combates_totales = 0
         self.combates_ganados = 0
@@ -361,6 +365,12 @@ class Gladiador(Character):
             if self.dias_ocupado == 0:
                 self.ocupacion = "disponible"
                 self.razon_ocupacion = None
+        
+        # Procesar efectos narrativos temporales
+        self.efectos_activos = [e for e in self.efectos_activos if e.get('dias_restantes', 0) > 0]
+        for efecto in self.efectos_activos:
+            if 'dias_restantes' in efecto:
+                efecto['dias_restantes'] -= 1
     
     def puede_luchar(self):
         """¿Puede participar en combate?"""
@@ -463,6 +473,13 @@ class Equipo:
         self.barracas = Barracas()  # Sistema de literas (2 al inicio)
         self.dinero = 0  # Dinero global
         self.gladiador_activo = None  # Seleccionado para combate
+        
+        # ⭐ NUEVO: SISTEMA DE NARRATIVA (Fase 3.3)
+        self.fama = 10  # Reputación de la escuela (0-100)
+        self.xp_bonus_activos = []  # Multiplicadores de XP temporales
+        self.victoria_reciente = False
+        self.racha_victorias = 0
+        self.dias_con_poco_oro = 0
     
     @property
     def espacios_disponibles(self):
@@ -515,6 +532,18 @@ class Equipo:
         """Llamado al fin de cada día - todos avanzan recuperación."""
         for gladiador in self.gladiadores:
             gladiador.pasar_dia()
+            
+        # Procesar bonus de XP temporales
+        self.xp_bonus_activos = [b for b in self.xp_bonus_activos if b.get('combates_restantes', 0) > 0]
+        
+        # Rastrear días con poco oro
+        if self.dinero < 300:
+            self.dias_con_poco_oro += 1
+        else:
+            self.dias_con_poco_oro = 0
+            
+        # Resetear victoria reciente diaria
+        self.victoria_reciente = False
     
     def __repr__(self):
         return f"Equipo({len(self.gladiadores)}/{self.barracas.espacios_totales} gladiadores, {self.dinero}g)"

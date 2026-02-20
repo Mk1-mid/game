@@ -1,53 +1,197 @@
-# 📚 ÍNDICE MAESTRO - SANGRE & FORTUNA
+# 📚 SUPER ÍNDICE - SANGRE POR FORTUNA
 
-**Última actualización:** 7 de Enero 2025  
-**Versión:** Fase 2.2 PULIDA ✨  
-**Documentos activos:** 8 (20 archivos eliminados por duplicación)
-
----
-
-## 🎯 COMIENZA AQUÍ
-
-### 👋 **¿ERES NUEVO?**
-→ Lee: [COMIENZA_AQUI.md](COMIENZA_AQUI.md) (5 min)
-
-### 🔧 **¿ERES DESARROLLADOR?**
-→ Lee: [TECNICA.md](TECNICA.md) + [desarrollo/GUIA_DESARROLLO.md](desarrollo/GUIA_DESARROLLO.md)
-
-### ✨ **¿QUIERES VER ESTADO ACTUAL?**
-→ Lee: [REPORTE_MAESTRO.md](REPORTE_MAESTRO.md)
+**v3.0 - Fase 3 (El Alma del Juego)**  
+**Última actualización:** Febrero 2026
 
 ---
 
-## 📖 GUÍAS PRINCIPALES
+## � ¿Por dónde empiezo?
 
-### 🚀 [COMIENZA_AQUI.md](COMIENZA_AQUI.md)
-**Para empezar rápido**
-- Descripción general del proyecto
-- Cómo ejecutar el juego
-- Estructura básica del código
-- Próximos pasos
+### 👤 Soy Jugador
+→ Lee **[COMIENZA_AQUI.md](COMIENZA_AQUI.md)**
 
-### 📋 [TECNICA.md](TECNICA.md)
-**Detalles técnicos completos**
-- Arquitectura del sistema
-- Modelos de datos
-- Flujo de combate
-- Sistema de habilidades (Fase 2.2)
-- Sistema de persistencia
+### 👨‍💻 Soy Desarrollador
+→ Empieza por **[ESTRUCTURA.md](ESTRUCTURA.md)**, luego **[MODULOS.md](MODULOS.md)**
 
-### 🎭 [COMPARATIVA_ARQUETIPOS.md](COMPARATIVA_ARQUETIPOS.md)
-**Análisis profundo de arquetipos**
-- 5 arquetipos de habilidades
-- Balance y comparativas
-- Stats y bonificadores
-- Triggers y activaciones
+### 🗺️ Quiero saber planes futuros
+→ Lee **[ROADMAP.md](ROADMAP.md)**
 
-### 🛣️ [roadmap-sangre-fortuna.md](roadmap-sangre-fortuna.md)
-**Plan general del proyecto**
-- Fases completadas
-- Fases en progreso
-- Fases futuras
+---
+
+## 📖 Los 5 Documentos Maestros
+
+### 1️⃣ 🏗️ **ESTRUCTURA.md** - Arquitectura
+Árbol de directorios, módulos src/, fórmulas, estadísticas
+
+### 2️⃣ ⚔️ **FUNCIONALIDADES.md** - Sistemas
+Arquetipos, habilidades, efectos, eventos, progresión, fama
+
+### 3️⃣ 📚 **MODULOS.md** - Código
+Detalles de cada archivo en src/, clases, funciones
+
+### 4️⃣ 🗺️ **ROADMAP.md** - Planes
+Fase 3 (75%), Fase 4, Fase 5, timeline
+
+### 5️⃣ 🎮 **COMIENZA_AQUI.md** - Jugadores
+Guía de inicio, menú, estrategias, FAQ
+
+---
+
+## 🗂️ Archivos Legacy (Deprecados pero aún presentes)
+
+Estos archivos pueden servir como referencia histórica pero **NO DEBEN SER USADOS para desarrollo**:
+
+| Archivo | Era | Usar en su lugar |
+|---------|-----|------------------|
+| ARQUITECTURA.md | Antigua | ESTRUCTURA.md + MODULOS.md |
+| TECNICA.md | Fase 2.0 | Outdated |
+| COMPARATIVA_ARQUETIPOS.md | Antigua | FUNCIONALIDADES.md |
+| ANALISIS_HABILIDADES_ESTADO.md | Antigua | FUNCIONALIDADES.md |
+| Carpetas: archivos/, desarrollo/, historial/ | Legacy | Ignorar |
+
+**Acción:** Estos serán archivados en próxima sesión
+
+---
+
+## 📊 ESTADO ACTUAL - FEBRERO 2026
+
+| Aspecto | Status | Archivo Maestro |
+|---------|--------|-----------------|
+| **Arquitectura** | ✅ 100% | ESTRUCTURA.md |
+| **Sistemas** | ✅ 100% | FUNCIONALIDADES.md |
+| **Código** | ✅ 100% | MODULOS.md |
+| **Planes** | ✅ Actualizado | ROADMAP.md |
+| **Duplicación** | ✅ 0% eliminada | Todos |
+| **Documentación** | ✅ Consolidada | Este INDICE |
+
+---
+
+**Última revisión:** Febrero 2026  
+*Consolidación de 17 archivos a 5 maestros*
+
+---
+
+## 📁 Estructura de Archivos de Documentación
+
+### En `docs/`
+```
+COMIENZA_AQUI.md          ← Guía para jugadores
+ARQUITECTURA.md           ← Descomposición técnica
+roadmap-sangre-fortuna.md ← Planes futuros (Fases 3-5)
+INDICE.md                 ← Este archivo
+
+archivos/                 ← Documentos legacy (ignorar)
+desarrollo/               ← Guías de desarrollo antiguas
+historial/                ← Historial de cambios antiguos
+```
+
+### En `raíz/`
+```
+CHANGELOG.md              ← Historial oficial (use este)
+main.py                   ← Punto de entrada
+README.md                 ← Info del proyecto (con estado)
+DOCUMENTACION.md          ← Legacy (DEPRECATED)
+```
+
+---
+
+## 🎭 Fase 3: El Alma del Juego (Actual)
+
+### ¿Qué se agregó?
+
+**1. Motor de Narrativa** (`src/narrativa.py`)
+- 12 eventos diferentes
+- Más de 80 resultados posibles
+- Sistema de probabilidades
+
+**2. Sistema de Fama**
+- Atributo en Gladiador y Equipo
+- Ganancia/Pérdida automática en arena
+- Dispara eventos especiales
+
+**3. Paso del Tiempo**
+- Opción 8: "Pasar Día"
+- Recuperación pasiva
+- Procesamiento de eventos
+
+### ¿Cómo funciona?
+
+```
+Usuario elige [8] en menú
+    ↓
+Equipo descansa (pasar_dia)
+    ↓
+GestorNarrativa intenta disparar evento
+    ↓
+Evento presentado con decisiones
+    ↓
+Consecuencias aplicadas al equipo
+```
+
+---
+
+## ⚙️ Sistema de Archivos Legacy (Deprecados)
+
+Estos archivos todavía existen pero **NO DEBEN SER USADOS**:
+
+| Archivo | Razón | Alternativa |
+|---------|-------|------------|
+| `docs/archivos/*` | Documentación fragmentada | Usar `ARQUITECTURA.md` |
+| `docs/historial/*` | Cambios antiguos | Usar `CHANGELOG.md` |
+| `DOCUMENTACION.md` | Índice antiguo | Usar `docs/INDICE.md` |
+| `docs/desarrollo/*` | Guías desactualizadas | Leer `src/` comentado |
+
+**Recomendación**: Considerar eliminar estos en siguiente refactor.
+
+---
+
+## 🔍 Búsqueda por Tema
+
+### "¿Cómo juego?"
+→ [COMIENZA_AQUI.md](COMIENZA_AQUI.md)
+
+### "¿Cómo programo?"
+→ [ARQUITECTURA.md](ARQUITECTURA.md)
+
+### "¿Qué se cambió?"
+→ [../CHANGELOG.md](../CHANGELOG.md)
+
+### "¿Qué viene después?"
+→ [roadmap-sangre-fortuna.md](roadmap-sangre-fortuna.md)
+
+### "¿Dónde está X clase?"
+→ Buscar en [ARQUITECTURA.md](ARQUITECTURA.md) sección "Núcleo de Modelos"
+
+### "¿Cómo agregar un evento?"
+→ [ARQUITECTURA.md](ARQUITECTURA.md) sección "Motor de Narrativa"
+
+---
+
+## 📊 Cobertura de Documentación
+
+| Aspecto | Cobertura | Archivo |
+|---------|-----------|---------|
+| **Jugabilidad** | ✅ 100% | COMIENZA_AQUI.md |
+| **Arquitectura** | ✅ 100% | ARQUITECTURA.md |
+| **Eventos/Narrativa** | ✅ 80% | ARQUITECTURA.md + src/narrativa.py |
+| **Habilidades** | ✅ 70% | ARQUITECTURA.md + src/habilidades.py |
+| **Misiones** | ✅ 60% | ARQUITECTURA.md + src/misiones.py |
+| **Persistencia** | ✅ 80% | ARQUITECTURA.md + src/persistence.py |
+| **Combate** | ✅ 75% | ARQUITECTURA.md + src/combat.py |
+
+---
+
+## 🚀 Próximas Acciones Recomendadas
+
+1. **Para Jugadores**: Abre `COMIENZA_AQUI.md` y empieza a jugar
+2. **Para Devs**: Lee `ARQUITECTURA.md` sección "Núcleo de Modelos"
+3. **Para Team**: Comparte `docs/COMIENZA_AQUI.md` y `CHANGELOG.md`
+4. **Para Mantenimiento**: Considera limpiar carpetas `archivos/`, `historial/`, `desarrollo/`
+
+---
+
+**Estado**: Fase 3 en progreso (75% completada)  
+**Versión**: 3.0
 - Timeline estimado
 
 ---

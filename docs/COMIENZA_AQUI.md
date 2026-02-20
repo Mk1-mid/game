@@ -1,44 +1,96 @@
 # 🎯 EMPIEZA AQUÍ - GUÍA RÁPIDA
 
-**Documentación de Sangre y Fortuna Fase 2.2**
+**Sangre por Fortuna v3.0 - Fase 3 (El Alma del Juego)**
 
 ---
 
-## ¿QUÉ SE HIZO?
+## ⚡ Inicio Rápido
 
-✅ **Unificó** toda la documentación en un solo documento  
-✅ **Depuró** la información redundante  
-✅ **Organizó** los archivos en estructura clara  
-✅ **Preservó** el estilo visual de COMPARATIVA_ARQUETIPOS.md  
-✅ **Movió** COMPARATIVA_ARQUETIPOS.md a `/docs/` con el resto de documentación técnica
+### Requisitos
+```bash
+python 3.8+
+pip install -r requirements.txt    # Si hay dependencias extras
+```
+
+### Ejecutar el Juego
+```bash
+python main.py
+```
+
+### Crear Partida
+1. Ingresa tu usuario (primera vez = crear nuevo)
+2. Serás asignado 2 gladiadores iniciales + 5000g
+3. ¡A jugar!
 
 ---
 
-## ¿QUÉ VEO DONDE?
+## 🎮 Primer Partido (Consejos)
 
-### 🎭 Para Tu Equipo (Revisión Rápida)
-👉 Lee: **[REPORTE_UNIFICADO_2.2.md](REPORTE_UNIFICADO_2.2.md)**
-- Todo lo que necesitan saber en un documento
-- 15 KB consolidados
-- Listo para revisar
+1. **Primeras Victorias (Arena)**
+   - Elige "Normal" (dificultad 🟡)
+   - Gana XP y dinero
+   - Obtén fama (importante para eventos)
 
-### 📊 Para Análisis de Balance (Te Gusta Este)
-👉 Ve: **[docs/COMPARATIVA_ARQUETIPOS.md](docs/COMPARATIVA_ARQUETIPOS.md)**
-- Estilo visual preservado (sin cambios)
-- Gráficos ASCII intactos
-- Análisis completo de arquetipos
+2. **Segundo Día (Pasar Tiempo)**
+   - Opción **8: Pasar Día** 
+   - Descansarán tus gladiadores
+   - Posible evento narrativo 🎭
 
-### 🔧 Para Detalles Técnicos
-👉 Ve: **[docs/](docs/)** - Carpeta completa con:
-- `TECNICA.md` - Detalles de implementación
-- `ESTRUCTURA.md` - Cómo está organizado
-- `COMPARATIVA_ARQUETIPOS.md` - Análisis visual
+3. **Expandir Equipo (Mercado)**
+   - Opción **4: Mercado**
+   - Compra nuevos gladiadores
+   - Desarrolla arquetipos distintos
 
-### 📚 Para Encontrar Cualquier Cosa
-👉 Lee: **[DOCUMENTACION.md](DOCUMENTACION.md)**
-- Índice maestro
-- Guía de navegación por rol
-- Links a todo
+4. **Mejorar Armas (Armería)**
+   - Opción **5: Armería**
+   - Vende items antiguos
+   - Equipa a tu mejor glaciador
+
+---
+
+## 📋 Menú Principal (Opciones)
+
+| # | Opción | Para Qué | Costo |
+|---|--------|----------|-------|
+| 1 | Arena | Combatir enemigos | Gratis |
+| 2 | Barracas | Comprar espacios | 500g c/u |
+| 3 | Hospital | Curar/Revivir | Variables |
+| 4 | Mercado | Comprar gladiadores | 500-2000g |
+| 5 | Armería | Items y armas | 100-5000g |
+| 6 | Ver Equipo | Info completa | Gratis |
+| 7 | Misiones | Objetivos menores | Recompensas |
+| **8** | **Pasar Día** | **Descansar + Eventos** | **Gratis** ⭐ |
+| 9 | Guardar | Guardación manual | Automática |
+| 0 | Salir | Cerrar juego | Autog. |
+
+---
+
+## 🎭 NUEVO: Sistema de Narrativa (Fase 3)
+
+### ¿Qué es el "Pasar Día"?
+Opción **8** en el menú avanza el tiempo. Tu equipo descansa y puede ocurrir un **evento narrativo**.
+
+### Ejemplos de Eventos
+
+**Festival de Gladiadores**
+> "Se aproxima el Festival. ¿Participas para ganar fama?"
+- ✅ Participar → +Fama, posible herida
+- ❌ No → Sin cambios
+
+**Rebelión de Gladiadores**
+> "Tu equipo está hambriento y cansado..."
+- 💰 Pagar +500g → Contentos, +Moral
+- 🗣️ Negociar → Riesgo de amotinamiento
+
+**Patrocinio de Noble**
+> "Un noble quiere que luches para él..."
+- 👑 Aceptar → Presión, pero +Dinero
+- 🙅 Rechazar → Sin cambios
+
+### Sistema de Fama
+- **Ganas Fama**: Al ganar combates (especialmente en dificultades altas)
+- **Pierdes Fama**: Al perder
+- **Usos**: Desbloquea eventos, mejores precios, eventos especiales
 
 ---
 

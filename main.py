@@ -11,6 +11,7 @@ Uso: python main.py
 """
 
 from src.models import Equipo, Gladiador
+from src.narrativa import GestorNarrativa
 from src.combat import combate_arena, calcular_xp_recompensa
 from src.store import (
     mostrar_catalogo, comprar_item, menu_armeria, equipar_item,
@@ -489,10 +490,23 @@ def combate_equipo(equipo, usuario=None, dificultad=None, multiplicador=1.0, sis
         
         gladiador.combates_ganados += 1
         gladiador.dinero_generado += recompensa
+        
+        # NUEVO: Incrementar Fama (Fase 3.1)
+        fama_ganada = int(2 * multiplicador)
+        gladiador.fama += fama_ganada
+        equipo.fama += fama_ganada
+        print(f"  🌟 Fama ganada: +{fama_ganada} (Total Equipo: {equipo.fama})")
+        equipo.victoria_reciente = True
     else:
         print("\n✗ DERROTA...")
         print(f"  {gladiador.nombre} fue derrotado")
         gladiador.combates_perdidos += 1
+        
+        # NUEVO: Perder Fama en derrota
+        fama_perdida = 1
+        gladiador.fama = max(0, gladiador.fama - fama_perdida)
+        equipo.fama = max(0, equipo.fama - fama_perdida)
+        print(f"  📉 Fama perdida: -{fama_perdida}")
         
         # Aplicar estado según daño
         if gladiador.hp_actual == 0:
@@ -1967,6 +1981,10 @@ def juego_principal():
     else:
         facilities = FacilitiesManager()
         print("⚒️  Sistema de facilidades inicializado")
+        
+    # NUEVA: Inicializar gestor narrativa (Fase 3)
+    gestor_narrativa = GestorNarrativa()
+    print("📜 Sistema narrativo activado")
     
     # LOOP PRINCIPAL DEL JUEGO
     juego_activo = True
@@ -2010,6 +2028,22 @@ def juego_principal():
             mostrar_menu_misiones(gestor_misiones, equipo)
         
         elif opcion == "8":
+            # NUEVA: Pasar Día y Eventos (Fase 3)
+            print("\n" + "="*50)
+            print("⏳ EL TIEMPO PASA EN LA LUDUS...")
+            print("="*50)
+            
+            # Pasar día en el equipo
+            equipo.pasar_dia()
+            
+            # Tirada de eventos narrativos
+            evento_disparado = gestor_narrativa.intentar_disparar_evento(equipo)
+            if not evento_disparado:
+                print("\n🌙 Ha sido un día tranquilo en las barracas.")
+            
+            input("\nPresiona ENTER para continuar...")
+
+        elif opcion == "9":
             # Guardar
             print("\n💾 Guardando partida...")
             
@@ -2026,7 +2060,7 @@ def juego_principal():
             print("✓ Facilities guardadas")
             print("✓ Partida completamente guardada")
         
-        elif opcion == "9":
+        elif opcion == "0":
             # Salir - Guardar partida automáticamente
             print(f"\n💾 Guardando partida de {usuario}...")
             
