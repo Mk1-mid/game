@@ -1,6 +1,6 @@
-# 🏛️ SANGRE POR FORTUNA - Juego de Gladiadores
+# ⚔️ SANGRE POR FORTUNA - Simulador de Gladiadores Romanos
 
-**Versión:** 2.2 (Fase 2.2 - Sistema de Habilidades Pulido) | **Estado:** ✅ Listo para Producción
+**Versión:** 2.2.1 (Hotfix - Correcciones de Balance) | **Estado:** ✅ Producción Estable
 
 Simulador de gladiadores en la antigua Roma escrito en **Python puro**. Gestiona tu equipo de gladiadores, compra equipo, combate en la arena, acumula riquezas y observa su progresión a través de múltiples niveles.
 
