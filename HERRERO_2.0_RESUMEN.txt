@@ -1,0 +1,173 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+RESUMEN HERRERO 2.0 - Implementación Completa
+Muestra todos los cambios y nuevas características
+"""
+
+from src.models import Weapon
+from src.facilities import Herrero
+
+print("""
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    ⚒️  HERRERO 2.0 - IMPLEMENTACIÓN COMPLETA                ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+""")
+
+print("""
+📋 CAMBIOS PRINCIPALES:
+""")
+
+cambios = [
+    ("Sistema de Mejora", "Anterior: Bonus fijos (+3/+5/+7/+10 ATK)", "Nuevo: % escalado (+8%/+12%/+15%/+20% por tier)"),
+    ("Costos", "Anterior: Flat (100/200/400/800g)", "Nuevo: Cuadrático (base × tipo × nivel²)"),
+    ("Durabilidad", "Anterior: No existía", "Nuevo: Tracking completo, -5% por mejora"),
+    ("Reparación", "Anterior: No existía", "Nuevo: Costo dinámico por degradación"),
+    ("Multiplicador Tipo", "Anterior: No existía", "Nuevo: Corta ×0.8, Media ×1.0, Grande ×1.3"),
+    ("Estadísticas", "Anterior: Básicas", "Nuevo: Tracking de armas mejoradas, ATK otorgado, reparaciones"),
+]
+
+for concepto, anterior, nuevo in cambios:
+    print(f"  • {concepto:20} | {anterior:45} → {nuevo}")
+
+print("""
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                            🔨 EJEMPLOS DE COSTOS                            ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+""")
+
+# Mostrar ejemplos de costos
+herrero = Herrero(nivel=3)
+
+ejemplos = [
+    ("Daga Oxidada", 5, 1, "corta"),
+    ("Espada Corta", 10, 1, "corta"),
+    ("Espada Gladius", 15, 2, "media"),
+    ("Tridente Romano", 14, 2, "media"),
+    ("Martillo Guerra", 16, 2, "media"),
+    ("Lanza Corta", 12, 1, "grande"),
+    ("Hacha Doble", 25, 3, "grande"),
+    ("Espada de Marte", 30, 4, "grande"),
+]
+
+for nombre, atk, tier, tipo_arma in ejemplos:
+    print(f"\n⚔️  {nombre:20} | ATK: {atk:2} | Tier {tier} | Tipo: {tipo_arma:6}")
+    print(f"   Multiplicador: ×{herrero.multiplicador_tipo[tipo_arma]:.1f}")
+    
+    # Muestra costos para primeras 4 mejoras
+    costo_base = herrero.costo_base_mejora[tier]
+    tipo_mult = herrero.multiplicador_tipo[tipo_arma]
+    
+    costos = []
+    for nivel in range(1, 5):
+        costo = int(costo_base * tipo_mult * (nivel ** 2))
+        costos.append(costo)
+    
+    print(f"   Costos mejora: +1: {costos[0]:4}g | +2: {costos[1]:4}g | +3: {costos[2]:4}g | +4: {costos[3]:4}g")
+
+print("""
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                      🛠️  SISTEMA DE DURABILIDAD                             ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+DEGRADACIÓN (por mejora):
+  • Cada mejora reduce -5% la durabilidad del arma
+  • Ejemplos:
+    - Espada +0: 100% durabilidad
+    - Espada +3: 85% durabilidad
+    - Espada +5: 75% durabilidad
+
+REPARACIÓN (costo dinámico):
+  • Costo = (100 - durabilidad_actual) × precio_base / 10
+  • Ejemplos (Tier 2, base 200g):
+    - Reparar de 95% → 100%: (100-95) × 200 / 10 = 100g
+    - Reparar de 50% → 100%: (100-50) × 200 / 10 = 1000g
+    - Reparar de 0% → 100%:  (100-0) × 200 / 10 = 2000g
+
+DECISIONES TÁCTICAS:
+  ✓ ¿Mejorar arma cara (riesgo durabilidad) o barata?
+  ✓ ¿Reparar temprano (barato) o esperar (caro)?
+  ✓ ¿Vender arma muy degradada o repararla?
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    📊 MENU HERRERO (5 Opciones Nuevas)                      ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+1. MEJORAR ARMA
+   • Selecciona arma del inventario
+   • Muestra costo de próxima mejora
+   • Aplica % bonus ATK
+   • Degrada durabilidad -5%
+   • Feedback: antes/después/durabilidad/costo
+
+2. REPARAR ARMA
+   • Selecciona arma del inventario
+   • Muestra durabilidad actual
+   • Costo dinámico por degradación
+   • Restaura a 100%
+   • Feedback: antes/después/durabilidad restaurada/costo
+
+3. VER ARMAS DISPONIBLES
+   • Compra armas nuevas (separado de mejorar)
+   • Respeta tier desbloqueado por nivel Herrero
+   • Stock completo de tienda
+
+4. MEJORAR HERRERO
+   • Sube nivel Herrero (1-5)
+   • Desbloquea nuevo tier de armas
+   • Costo: 600→1200→2500→4000g
+   • Feedback: nivel actual y tier desbloqueado
+
+5. ESTADÍSTICAS
+   • Armas mejoradas (contador)
+   • ATK total otorgado (suma)
+   • Armas reparadas (contador)
+   • Durabilidad restaurada (suma)
+   • Visualización tipo Médico
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                         ⚡ BALANCE ACTUAL                                   ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+TIER 1 (Básico):
+  • Daga Oxidada: 5 ATK → +1 por mejora → 6/7/8/9/10 ATK
+  • Costos: 80g → 320g → 720g → 1280g → 2000g (TOTAL: 4400g)
+  
+TIER 2 (Intermedio):
+  • Espada Gladius: 15 ATK → +1-2 por mejora → 16/17-18/19-21/...
+  • Costos: 200g → 800g → 1800g → 3200g (TOTAL: 6000g)
+  
+TIER 3 (Avanzado):
+  • Espada Gladius +2: 20 ATK → +3 por mejora → 23/26/29/32 ATK
+  • Costos: 400g → 1600g → 3600g → 6400g (TOTAL: 12000g)
+  
+TIER 4 (Legendario):
+  • Espada de Marte: 30 ATK → +6 por mejora → 36/42/48/54 ATK
+  • Costos: 1040g → 4160g → 9360g → 16640g (TOTAL: 31200g)
+
+ANÁLISIS:
+  ✓ Armas baratas: muchas mejoras posibles (~5 antes de quedarse sin dinero)
+  ✓ Armas caras: decisión táctica (una o dos mejoras máximo)
+  ✓ No hay "arma única OP" - balance mantenido
+  ✓ Progresión viaja a través de tiers, no solo mejoras
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                      ✅ IMPLEMENTACIÓN COMPLETADA                            ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+ARCHIVOS MODIFICADOS:
+  • src/facilities.py: Clase Herrero completamente reescrita (360 líneas)
+  • main.py: menu_herrero() actualizado con 5 opciones nuevas (200 líneas)
+
+TESTS:
+  • test_herrero_v2.py: Test funcional completo ✅ PASADO
+  • Compilación: ✅ OK (facilities.py + main.py)
+
+PRÓXIMOS PASOS:
+  1. Evento enemigos mejoran cada 50 días
+  2. Balanceo según feedback del usuario
+  3. UI visual para mostrar progresión de durabilidad
+
+""")
