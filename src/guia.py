@@ -64,17 +64,17 @@ def estructura():
 │   └── saves/                Archivos de partidas
 │
 ├── docs/                     Documentación
-│   ├── ESTRUCTURA.md
-│   └── GUIA_DESARROLLO.md
+│   ├── TECNICA.md            Referencia técnica
+│   ├── ROADMAP.md            Estado y planes
+│   └── HISTORIAL.md          Historial del desarrollo
 │
 ├── main.py                   Punto de entrada
 └── README.md                 Información principal
 
 📖 DOCUMENTACIÓN:
   → README.md                 Información general
-  → docs/ESTRUCTURA.md        Detalles técnicos
-  → docs/GUIA_DESARROLLO.md  Para programadores
-  → REORGANIZACION.md         Cambios realizados
+  → docs/TECNICA.md           Detalles técnicos y guía de desarrollo
+  → docs/ROADMAP.md           Estado actual y planes
     """)
 
 def nuevo_enemigo():
@@ -218,9 +218,8 @@ def problemas():
    - Asegúrate de escribir la opción correcta
 
 📞 MÁS AYUDA:
-   - Lee docs/ESTRUCTURA.md
-   - Revisa docs/GUIA_DESARROLLO.md
-   - Consulta REORGANIZACION.md
+   - Lee docs/TECNICA.md
+   - Consulta docs/ROADMAP.md
     """)
 
 def main():

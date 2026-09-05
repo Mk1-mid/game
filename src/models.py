@@ -107,6 +107,11 @@ class Character:
         bonus_hp = self.armor.hp if self.armor else 0
         return self.hp + bonus_hp
 
+    @property
+    def hp_maximo(self):
+        """Alias del HP máximo (sin armadura) para compatibilidad."""
+        return self.hp
+
     def agilidad_final(self):
         """Calcula agilidad total (base + arma)."""
         bonus_agilidad = self.weapon.agilidad if self.weapon else 0

@@ -497,8 +497,8 @@ def verificar_y_activar_triggers(gladiador, estado_combate: Dict) -> List[str]:
     
     for habilidad in gladiador.habilidades:
         if habilidad.verificar_trigger(
-            gladiador.salud,
-            gladiador.salud_maxima,
+            gladiador.hp_actual,
+            gladiador.hp_maximo,
             estado_combate
         ):
             habilidad.activar()

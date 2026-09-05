@@ -20,8 +20,9 @@ def verificar_estructura():
         ],
         "Documentación": [
             "README.md",
-            "docs/ESTRUCTURA.md",
-            "docs/GUIA_DESARROLLO.md",
+            "docs/TECNICA.md",
+            "docs/ROADMAP.md",
+            "docs/HISTORIAL.md",
         ],
         "Configuración": [
             "main.py",

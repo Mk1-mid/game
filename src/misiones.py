@@ -629,7 +629,7 @@ class GestorMisiones:
     # PERSISTENCIA: Guardar y cargar misiones
     # ============================================
     
-    def guardar_estado(self, archivo: str = "datos/misiones.json") -> bool:
+    def guardar_estado(self, archivo: str = "data/misiones.json") -> bool:
         """
         Guarda el estado de todas las misiones a un archivo JSON.
         Retorna True si se guardó correctamente.
@@ -676,7 +676,7 @@ class GestorMisiones:
             print(f"❌ Error al guardar misiones: {e}")
             return False
     
-    def cargar_estado(self, archivo: str = "datos/misiones.json") -> bool:
+    def cargar_estado(self, archivo: str = "data/misiones.json") -> bool:
         """
         Carga el estado de misiones desde un archivo JSON.
         Retorna True si se cargó correctamente.

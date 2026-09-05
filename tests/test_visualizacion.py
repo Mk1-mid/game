@@ -6,7 +6,7 @@ Script de prueba para visualizar habilidades en combate
 
 import sys
 import os
-sys.path.insert(0, 'c:\\Users\\USUARIO\\Desktop\\juego')
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Configurar codificación UTF-8 para Windows
 if os.name == 'nt':

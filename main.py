@@ -28,7 +28,7 @@ import random
 try:
     import pygame
     pygame.mixer.init()
-    pygame.mixer.music.load("musica.mp3")
+    pygame.mixer.music.load("assets/musica.mp3")
     pygame.mixer.music.play(-1)
 except:
     pass  # Música no disponible
@@ -1945,7 +1945,7 @@ def juego_principal():
     
     # Cargar estado de misiones si existe partida anterior
     if datos_guardados and not crear_nuevo:
-        if gestor_misiones.cargar_estado(f"datos/misiones_{usuario}.json"):
+        if gestor_misiones.cargar_estado(f"data/misiones_{usuario}.json"):
             print("✓ Misiones restauradas desde partida anterior")
         else:
             print("⚠️  No se encontraron misiones guardadas (comenzando nuevas)")
@@ -2018,7 +2018,7 @@ def juego_principal():
             guardar_partida(usuario, datos_equipo)
             
             # Guardar misiones
-            if gestor_misiones.guardar_estado(f"datos/misiones_{usuario}.json"):
+            if gestor_misiones.guardar_estado(f"data/misiones_{usuario}.json"):
                 print("✓ Misiones guardadas")
             
             # Guardar facilities
@@ -2035,7 +2035,7 @@ def juego_principal():
             guardar_partida(usuario, datos_equipo)
             
             # Guardar misiones
-            if gestor_misiones.guardar_estado(f"datos/misiones_{usuario}.json"):
+            if gestor_misiones.guardar_estado(f"data/misiones_{usuario}.json"):
                 print("✓ Misiones guardadas")
             
             print(f"✓ Partida completamente guardada")
