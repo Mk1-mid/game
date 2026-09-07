@@ -1,0 +1,10 @@
+{
+    "registros": {
+        "test_user": {
+            "victorias": 10,
+            "dinero": 5000,
+            "nivel": 5,
+            "titulo": "El Honorable"
+        }
+    }
+}

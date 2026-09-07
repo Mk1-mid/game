@@ -95,6 +95,18 @@ def serializar_equipo(equipo):
         "literas": equipo.barracas.literas,
         "espacios_totales": equipo.barracas.espacios_totales,
         "gladiadores": [serializar_gladiador(g) for g in equipo.gladiadores],
+        # Fase 3.2: honra, materiales y estado social
+        "honra": equipo.honra,
+        "racha_victorias_limpias": equipo.racha_victorias_limpias,
+        "materiales": equipo.materiales,
+        "habilitado_clandestino": equipo.habilitado_clandestino,
+        "rumor_ofrecido": equipo.rumor_ofrecido,
+        "fama": equipo.fama,
+        "prestamos_pendientes": equipo.prestamos_pendientes,
+        "penitencia_fama_dias": equipo.penitencia_fama_dias,
+        # Fase 3.3: instalaciones y trabajadores
+        "instalaciones": equipo.instalaciones.serializar() if equipo.instalaciones else None,
+        "trabajadores_activos": equipo.trabajadores_activos,
     }
 
 
@@ -113,7 +125,27 @@ def deserializar_equipo(data):
     for gdata in data["gladiadores"]:
         g = deserializar_gladiador(gdata)
         equipo.gladiadores.append(g)
-    
+
+    # Fase 3.2: campos nuevos con defaults para compatibilidad con saves antiguos
+    equipo.honra = data.get("honra", 50)
+    equipo.racha_victorias_limpias = data.get("racha_victorias_limpias", 0)
+    equipo.materiales = data.get("materiales", {})
+    equipo.habilitado_clandestino = data.get("habilitado_clandestino", False)
+    equipo.rumor_ofrecido = data.get("rumor_ofrecido", False)
+    equipo.fama = data.get("fama", 0)
+    equipo.prestamos_pendientes = data.get("prestamos_pendientes", [])
+    equipo.penitencia_fama_dias = data.get("penitencia_fama_dias", 0)
+
+    # Fase 3.3: instalaciones y trabajadores
+    if data.get("instalaciones"):
+        from .instalaciones import cargar_instalaciones
+        equipo.instalaciones = cargar_instalaciones({"instalaciones": data["instalaciones"]})
+    else:
+        from .instalaciones import GestorInstalaciones
+        equipo.instalaciones = GestorInstalaciones()
+
+    equipo.trabajadores_activos = data.get("trabajadores_activos", [])
+
     return equipo
 
 
@@ -168,6 +200,47 @@ def cargar_facilities(datos):
         fm.cargar_estado(datos["facilities"])
     
     return fm
+
+
+def guardar_patricios(usuario, gestor_patricios):
+    """
+    Guarda el mundo de patricios dentro del save del usuario (Fase 3.2).
+    Sigue el patrón de guardar_facilities: fusiona con datos existentes.
+    """
+    archivo = os.path.join("data/saves", f"save_{usuario}.json")
+
+    try:
+        datos = {}
+        if os.path.exists(archivo):
+            with open(archivo, 'r', encoding='utf-8') as f:
+                datos = json.load(f)
+
+        datos["patricios"] = gestor_patricios.serializar()
+
+        with open(archivo, 'w', encoding='utf-8') as f:
+            json.dump(datos, f, indent=2, ensure_ascii=False)
+        return True
+    except Exception as e:
+        print(f"❌ Error guardando patricios: {e}")
+        return False
+
+
+def cargar_patricios(datos):
+    """
+    Restaura el gestor de patricios desde el dict del save (Fase 3.2).
+
+    Args:
+        datos: Diccionario completo del save (o None)
+
+    Returns:
+        GestorPatricios: con patricios restaurados, o vacío si no hay datos
+    """
+    from .patricios import GestorPatricios
+
+    gestor = GestorPatricios()
+    if datos and "patricios" in datos:
+        gestor.deserializar(datos["patricios"])
+    return gestor
 
 
 def cargar_equipo_partida(usuario):

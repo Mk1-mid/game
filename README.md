@@ -38,6 +38,7 @@ python tests/run_tests_new.py
 - **Gestión:** barracas, hospital/médico, herrero (mejora de armas), armería, mercado de gladiadores
 - **Misiones:** 23 misiones con auto-tracking y notificaciones
 - **Sistema de ligas:** ranking y puntos por combate
+- **Leaderboards globales:** 3 rankings Top 10 entre todos los jugadores (victorias, fortuna, nivel) con récords históricos
 - **Persistencia:** autenticación, partidas guardadas en JSON, multiusuario
 
 ## 📁 Estructura del Proyecto
@@ -75,8 +76,11 @@ game/
 
 ## 📚 Documentación
 
+> ⚠️ **Si eres un agente de IA trabajando en este proyecto:** lee primero [AGENTS.md](AGENTS.md) — contiene las convenciones, patrones y reglas obligatorias del proyecto.
+
 | Documento | Contenido |
 |-----------|-----------|
+| [AGENTS.md](AGENTS.md) | Convenciones del proyecto para agentes de IA (reglas obligatorias) |
 | [docs/TECNICA.md](docs/TECNICA.md) | Arquitectura, modelos, combate, habilidades, balance, guía de desarrollo |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | Estado actual, fases completadas y plan futuro |
 | [docs/HISTORIAL.md](docs/HISTORIAL.md) | Línea de tiempo del desarrollo y changelog |

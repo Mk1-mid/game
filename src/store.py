@@ -164,25 +164,27 @@ def mostrar_catalogo():
     """)
 
 
-def comprar_item(opcion, dinero, inventario):
+def comprar_item(opcion, dinero, inventario, modificador_precio=1.0):
     """
     Compra un item y lo añade al inventario.
-    
+
     Args:
         opcion: ID del item a comprar
         dinero: Dinero disponible del jugador
         inventario: Inventario actual del jugador
-    
+        modificador_precio: Multiplicador (1.0 = normal, 0.9 = -10%, 1.15 = +15%)
+
     Returns:
         tuple: (dinero_actualizado, inventario_actualizado, item_comprado o None)
     """
-    
+
     if opcion not in PRECIOS:
         print("❌ Opción inválida")
         return dinero, inventario, None
 
-    precio = PRECIOS[opcion]
-    
+    precio_base = PRECIOS[opcion]
+    precio = int(precio_base * modificador_precio)
+
     if dinero < precio:
         print(f"❌ No tienes suficiente dinero. Necesitas {precio}g, tienes {dinero}g")
         return dinero, inventario, None
@@ -195,14 +197,18 @@ def comprar_item(opcion, dinero, inventario):
 
     dinero -= precio
     inventario.append(item)
-    
-    print(f"✓ ¡Compraste {item.nombre} por {precio}g!")
+
+    if modificador_precio != 1.0:
+        signo = "-" if modificador_precio < 1.0 else "+"
+        print(f"✓ ¡Compraste {item.nombre} por {precio}g! ({signo}{int((modificador_precio-1)*100)}% por tu fama)")
+    else:
+        print(f"✓ ¡Compraste {item.nombre} por {precio}g!")
     print(f"  Dinero restante: {dinero}g")
-    
+
     return dinero, inventario, item
 
 
-def menu_armeria(dinero, inventario, gestor_misiones=None):
+def menu_armeria(dinero, inventario, gestor_misiones=None, modificador_precio=1.0):
     """Recibe gestor_misiones como parámetro."""
     
     while True:
@@ -565,29 +571,35 @@ def mostrar_catalogo_herrero(herrero_nivel=1):
     print("=" * 90 + "\n")
 
 
-def comprar_item_herrero(opcion, dinero, inventario, herrero_nivel=1):
+def comprar_item_herrero(opcion, dinero, inventario, herrero_nivel=1, modificador_precio=1.0):
     """
     Compra un item verificando requisitos de Herrero.
     Si es un arma bloqueada, muestra mensaje de desbloqueo.
     """
     if opcion not in PRECIOS:
         return False, 0, "❌ Opción inválida"
-    
-    precio = PRECIOS[opcion]
-    
+
+    precio_base = PRECIOS[opcion]
+    precio = int(precio_base * modificador_precio)
+
     # Si es una arma, verifica si está desbloqueada
     if opcion in CATALOGO_ARMAS:
         arma = CATALOGO_ARMAS[opcion]
         if arma.tier > herrero_nivel:
             return False, 0, f"🔒 Esta arma está bloqueada. Se desbloquea a nivel {arma.tier} de Herrero"
-    
+
     # Verifica dinero
     if dinero < precio:
         return False, 0, f"💰 No tienes suficiente dinero. Necesitas {precio}g"
-    
+
     # Compra normalmente
     if opcion not in inventario:
         inventario[opcion] = 0
     inventario[opcion] += 1
-    
+
+    if modificador_precio != 1.0:
+        signo = "-" if modificador_precio < 1.0 else "+"
+        return True, precio, (f"✅ Compraste {CATALOGO_ARMAS.get(opcion, CATALOGO_ARMADURAS.get(opcion, CATALOGO_POCIONES.get(opcion, 'Item'))).nombre} "
+                f"({signo}{int((modificador_precio-1)*100)}% por tu fama)")
+
     return True, precio, f"✅ Compraste {CATALOGO_ARMAS.get(opcion, CATALOGO_ARMADURAS.get(opcion, CATALOGO_POCIONES.get(opcion, 'Item'))).nombre}"

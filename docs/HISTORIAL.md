@@ -51,6 +51,39 @@ El juego partía de una base sólida: combate automático por turnos, 5 tipos de
 - **Durabilidad**: −5% por mejora; reparación `(100 − durab) × base / 10`.
 - Niveles de herrero 1–5 desbloquean tiers (600g → 4000g).
 
+### 🌐 Fase 3.1 — Leaderboards Globales (Septiembre 2026)
+
+- Nuevo módulo `src/leaderboards.py`: `LeaderboardsGlobales` con 3 rankings Top 10 (victorias, fortuna, nivel máximo) compartidos entre TODOS los usuarios.
+- Registra **máximos históricos** (no valores actuales): un jugador que llegó a 5000g conserva ese récord aunque luego gaste el dinero.
+- Archivo global `data/leaderboards_global.json` (fuera del save de cada usuario, para que nadie sobreescriba los récords de otro); tolerante a archivo corrupto.
+- Integración en `main.py`: opción 10 del menú principal (Top victorias / fortuna / nivel + posición propia) y actualización automática al guardar (opciones 8 y 9).
+- Infraestructura de proyecto: creado `AGENTS.md` con las convenciones y reglas de desarrollo; README apunta a él.
+- Tests: 6 tests nuevos en `tests/test_leaderboards.py` (caso normal, máximos, límite Top 10, entradas inválidas, posición, ciclo completo de persistencia); suite maestra 7/7 → 13/13.
+
+### 🏛️ Fase 3.2 — Eventos, Patricios y Honra (Septiembre 2026)
+
+- **Patricios** (`src/patricios.py`): 5–7 patricios generados al crear partida, con equipos propios (2–4 gladiadores reales), afinidad/rivalidad (−100 a +100), honra propia y simulación diaria completa (progreso de equipos + combates NPC vs NPC + ranking local).
+- **Honra** en `Equipo` (0–100, inicio 50): victoria limpia +1 (+2 con racha ≥5); evento turbio −5~−12 y racha=0. Títulos: "El Honorable" ≥80 / "El Respetable" 60–79 / neutro 40–59 / "El Turbio" 20–39 / "El Corrupto de Roma" ≤19.
+- **Redención**: camino lento (racha de victorias limpias, contador visible, resetea con 1 evento turbio) o penitencia pública (600g + fama atada 1 día → +20 honra).
+- **Inventario de materiales** en `Equipo` (`materiales: dict`), métodos agregar/consumir/tiene, persistencia.
+- **12 eventos** (`src/events.py`): mercader ambulante, préstamo a patricio (±afinidad/±honra + préstamo a 3 días), donación de admirador (oro/pociones/materiales), apuesta clandestina, torneo clandestino (participar/apostar/organizar), desafío de patricio rival (ganas: rivalidad −70%, +fama, +3 honra; pierdes: gladiador herido, rivalidad +20%, fama −5), libertad del gladiador famoso (mercado/entrenamiento/mina), relaciones de patricios, epidemia menor, rumor de soborno (gancho bootstrap, flag `habilitado_clandestino`), patrocinio honorable (honra ≥70), penitencia pública.
+- **Título por honra visible en leaderboards** (Fase 3.1).
+- **Mercado simétrico**: honra ≥70 = −10% precios; honra ≤19 = +15% precios.
+- Hook de "fin de día" tras cada combate: avanza ocupación, resetea facilities, simula patricios, tira evento, procesa préstamos, reduce fama atada, actualiza honra/racha.
+- Tests: 6 tests nuevos (`tests/test_events.py`, `tests/test_patricios.py`) integrados en `run_tests_new.py`; suite maestra 13/13 → 30/30.
+
+### 🏛️ Fase 3.3 — Instalaciones de Recursos (Septiembre 2026)
+
+- **3 instalaciones comprables** (Cantera, Granja, Aserradero) con **prerequisito de Herrero nivel 2** (los materiales no tienen uso sin Forja).
+- **Precios:** 2500g base · mejoras 1200/2200/3500/5000g · total maxear 1 ≈ 14400g.
+- **Rarezas con clamp duro:** mítica ≤8% siempre, común ≥60% siempre, especial absorbe resto (fórmula: normalizar → clamp mítica≤8% → clamp común≥60% → especial absorbe).
+- **Trabajo de gladiadores:** 1/3/5 días → XP 50/150/250, stat +1/+3/+5, 1/2/3 materiales, riesgo herida 5%/12%/20%.
+  - Cantera → Fuerza | Granja → Agilidad | Aserradero → Vitalidad (HP).
+- **Ingreso pasivo:** 50/75/100/125/150g por nivel/día (complementa arena, nunca la reemplaza).
+- **Ocupación:** reusa `ocupar()`/`pasar_dia()` existente.
+- **Prerequisito Herrero 2:** coherencia temática (materiales sin forja no sirven).
+- Tests: 19 tests nuevos en `tests/test_instalaciones.py`; suite maestra 30/30 → 51/51.
+
 ### ✅ Auditorías y validación global
 
 - 25 archivos Python compilando sin errores, 0 imports rotos, 100% docstrings.
@@ -75,8 +108,11 @@ El juego partía de una base sólida: combate automático por turnos, 5 tipos de
 | **2.2** | Habilidades especiales (25), triggers, visualización, contenido Fase 1 (31 items). |
 | **2.3–2.4** | Sistema de gladiadores (equipo completo), arenas con 4 dificultades, ligas, pulido UI. |
 | Herrero 2.0 | Mejoras % por tier, durabilidad, niveles de herrero. |
+| **3.1** | Leaderboards globales (3 rankings Top 10 multiusuario, máximos históricos). |
+| **3.2** | Eventos, patricios, honra/redención, 12 eventos, mercado simétrico. |
+| **3.3** | Instalaciones de recursos (Cantera/Granja/Aserradero, trabajo gladiadores, clamp rareza, prereq herrero 2). |
 
-**Próximo:** Fase 3 (talentos, forja, eventos, leaderboards) — ver [ROADMAP.md](ROADMAP.md).
+**Próximo:** Fase 3.4 (herrería ampliada/forja) — ver [ROADMAP.md](ROADMAP.md).
 
 ---
 

@@ -77,6 +77,40 @@ class Potion(Item):
         return f"Potion({self.nombre}, tipo:{self.tipo}, valor:{self.valor})"
 
 
+class Material(Item):
+    """Material de forja/trabajo con rareza (Fase 3.2+)."""
+    RAREZAS = ("comun", "especial", "mitica")
+
+    def __init__(self, nombre, rareza="comun", valor=0):
+        """
+        Args:
+            nombre: Nombre del material (ej: "Mineral de Hierro")
+            rareza: "comun" | "especial" | "mitica"
+            valor: Valor base en oro (para venta/referencia)
+        """
+        super().__init__(nombre)
+        self.rareza = rareza
+        self.valor = valor
+
+    def __repr__(self):
+        return f"Material({self.nombre}, {self.rareza}, {self.valor}g)"
+
+
+# Catálogo de materiales: nombre -> (rareza, valor base)
+# La cantera/granja/aserradero de la Fase 3.3 producirán estos materiales.
+CATALOGO_MATERIALES = {
+    "Mineral de Hierro": ("comun", 20),
+    "Mineral Raro": ("especial", 80),
+    "Mithril": ("mitica", 300),
+    "Cuero": ("comun", 15),
+    "Cuero Endurecido": ("especial", 70),
+    "Piel de Bestia": ("mitica", 280),
+    "Madera de Roble": ("comun", 12),
+    "Madera de Ébano": ("especial", 60),
+    "Madera Ancestral": ("mitica", 250),
+}
+
+
 # ============================================
 # CLASE BASE DE PERSONAJE
 # ============================================
@@ -468,6 +502,91 @@ class Equipo:
         self.barracas = Barracas()  # Sistema de literas (2 al inicio)
         self.dinero = 0  # Dinero global
         self.gladiador_activo = None  # Seleccionado para combate
+
+        # === Fase 3.2: Honra, materiales y flags sociales ===
+        self.honra = 50              # 0-100; ver titulo_honra() para bandas
+        self.racha_victorias_limpias = 0  # se resetea a 0 con cualquier evento turbio
+        self.materiales = {}         # {"Mineral de Hierro": 3, ...}
+        self.habilitado_clandestino = False  # se activa con el "Rumor de soborno"
+        self.rumor_ofrecido = False     # el rumor solo se ofrece UNA vez (gancho)
+        self.fama = 0                   # fama pública (sube/baja con desafíos)
+        self.prestamos_pendientes = []  # [{"patricio", "monto", "dias_restantes"}]
+        self.penitencia_fama_dias = 0   # días con fama atada tras penitencia pública
+
+        # === Fase 3.3: Instalaciones y trabajadores ===
+        self.instalaciones = None  # GestorInstalaciones (se crea en main)
+        self.trabajadores_activos = []  # [{"gladiador": g, "instalacion_tipo": str, "dias_restantes": int, "dias_totales": int}]
+
+    # --- Honra (Fase 3.2) ---
+
+    def titulo_honra(self):
+        """Título narrativo según honra (bandas sin huecos: 0-100)."""
+        if self.honra >= 80:
+            return "El Honorable"
+        elif self.honra >= 60:
+            return "El Respetable"
+        elif self.honra >= 40:
+            return None  # zona neutra, sin título
+        elif self.honra >= 20:
+            return "El Turbio"
+        else:
+            return "El Corrupto de Roma"  # 0-19
+
+    def modificador_mercado(self):
+        """Multiplicador de precios del mercado según honra (Fase 3.2)."""
+        if self.honra >= 70:
+            return 0.90  # -10%: honorables inspiran confianza
+        elif self.honra <= 19:
+            return 1.15  # +15%: los mercaderes desconfían
+        return 1.0
+
+    def modificar_honra(self, delta):
+        """Suma/resta honra manteniendo límites 0-100. Retorna el valor final."""
+        self.honra = max(0, min(100, self.honra + delta))
+        return self.honra
+
+    def registrar_victoria_limpia(self):
+        """
+        Victoria en arena oficial: +1 honra (+2 con racha >= 5) y racha +1.
+        Es el "camino lento" de redención: subir honra sin eventos turbios.
+        """
+        self.racha_victorias_limpias += 1
+        ganancia = 2 if self.racha_victorias_limpias >= 5 else 1
+        return self.modificar_honra(ganancia)
+
+    def registrar_evento_turbio(self, costo_honra):
+        """
+        Participación en evento clandestino: baja honra Y reinicia la racha.
+        La racha (no el número de honra) es el compromiso real de redención.
+        """
+        self.racha_victorias_limpias = 0
+        return self.modificar_honra(-abs(costo_honra))
+
+    # --- Materiales (Fase 3.2) ---
+
+    def agregar_material(self, nombre, cantidad=1):
+        """Añade materiales al inventario. Retorna la cantidad total actual."""
+        if cantidad <= 0:
+            return self.materiales.get(nombre, 0)
+        self.materiales[nombre] = self.materiales.get(nombre, 0) + cantidad
+        return self.materiales[nombre]
+
+    def tiene_material(self, nombre, cantidad=1):
+        """Verifica si hay suficiente de un material."""
+        return self.materiales.get(nombre, 0) >= cantidad
+
+    def consumir_material(self, nombre, cantidad=1):
+        """
+        Consume materiales del inventario.
+        Retorna (éxito, cantidad_consumida, mensaje) — patrón de 3 valores.
+        """
+        if not self.tiene_material(nombre, cantidad):
+            actual = self.materiales.get(nombre, 0)
+            return False, 0, f"❌ Faltan materiales: {nombre} ({actual}/{cantidad})"
+        self.materiales[nombre] -= cantidad
+        if self.materiales[nombre] <= 0:
+            del self.materiales[nombre]
+        return True, cantidad, f"✓ Usados {cantidad}x {nombre}"
     
     @property
     def espacios_disponibles(self):
@@ -520,8 +639,159 @@ class Equipo:
         """Llamado al fin de cada día - todos avanzan recuperación."""
         for gladiador in self.gladiadores:
             gladiador.pasar_dia()
-    
-    def __repr__(self):
+
+        # Fase 3.3: Procesar trabajadores en instalaciones
+        if self.instalaciones:
+            self._procesar_trabajadores()
+
+    # --- Fase 3.3: Instalaciones y Trabajadores ---
+
+    def _procesar_trabajadores(self):
+        """Procesa el avance de los trabajadores en instalaciones (llamado en pasar_dia)."""
+        if not self.instalaciones or not self.trabajadores_activos:
+            return
+
+        completados = []
+        for i, trabajo in enumerate(self.trabajadores_activos):
+            trabajo["dias_restantes"] -= 1
+            if trabajo["dias_restantes"] <= 0:
+                completados.append((i, trabajo))
+
+        # Procesar completados en orden inverso para no romper índices
+        for idx, trabajo in reversed(completados):
+            self._finalizar_trabajo(idx, trabajo)
+
+    def _finalizar_trabajo(self, idx: int, trabajo: Dict):
+        """
+        Procesa la finalización de un trabajo y otorga recompensas.
+        Args:
+            idx: índice en self.trabajadores_activos
+            trabajo: dict con gladiador, instalacion_tipo, dias_totales
+        """
+        if not self.instalaciones:
+            return
+
+        gladiador = trabajo["gladiador"]
+        tipo = trabajo["instalacion_tipo"]
+        dias = trabajo["dias_totales"]
+
+        instalacion = self.instalaciones.obtener_por_tipo(tipo)
+        if not instalacion or not instalacion.comprada:
+            # Instalación ya no existe, solo devolver gladiador
+            self.trabajadores_activos.pop(idx)
+            return
+
+        # Calcular recompensas
+        materiales, xp, stat_gain = instalacion.calcular_recompensas_trabajo(trabajo["dias_totales"])
+
+        # Otorgar materiales
+        for mat in materiales:
+            self.agregar_material(mat.nombre, 1)
+
+        # Otorgar XP
+        gladiador.ganar_xp(xp)
+
+        # Otorgar stat
+        stat = instalacion.stat_objetivo
+        if stat == "hp":
+            # Vitalidad = HP base + HP actual proporcional
+            hp_antes = gladiador.hp
+            gladiador.hp += stat_gain
+            gladiador.hp_actual = min(gladiador.hp_actual + stat_gain, gladiador.hp)
+            hp_ganado = gladiador.hp - hp_antes
+            stat_msg = f"+{hp_ganado} HP (Vitalidad)"
+        elif stat == "fuerza":
+            gladiador.fuerza += stat_gain
+            stat_msg = f"+{stat_gain} Fuerza"
+        elif stat == "agilidad":
+            gladiador.agilidad += stat_gain
+            stat_msg = f"+{stat_gain} Agilidad"
+        else:
+            stat_msg = f"+{stat_gain} {stat}"
+
+        # Recalcular stats derivados si cambió fuerza/agilidad
+        if stat in ("fuerza", "agilidad"):
+            gladiador.calcular_stats_finales()
+
+        # Riesgo de herida
+        msg_herida = None
+        if instalacion.riesgo_herida(trabajo["dias_totales"]) > 0:
+            msg_herida = instalacion.procesar_riesgo_herida(gladiador, trabajo["dias_totales"])
+
+        # Generar mensaje de retorno
+        mats_str = ", ".join(f"{m.nombre} ({m.rareza})" for m in materiales) if materiales else "nada"
+        msg = (f"🎖️ {gladiador.nombre} volvió del trabajo en {instalacion.nombre}: "
+               f"{len(materiales)} materiales ({mats_str}), +{xp} XP, {stat_msg}")
+        if msg_herida:
+            msg += f" | {msg_herida}"
+
+        print(msg)
+
+        # Remover de trabajadores
+        self.trabajadores_activos.pop(idx)
+
+    def asignar_trabajador(self, gladiador_idx: int, instalacion_tipo: str, dias: int) -> Tuple[bool, str]:
+        """
+        Asigna un gladiador a trabajar en una instalación.
+
+        Args:
+            gladiador_idx: índice en self.gladiadores
+            instalacion_tipo: "cantera", "granja", "aserradero"
+            dias: 1, 3, o 5
+
+        Returns:
+            (éxito, mensaje)
+        """
+        if not self.instalaciones:
+            return False, "❌ No hay instalaciones disponibles"
+
+        if gladiador_idx < 0 or gladiador_idx >= len(self.gladiadores):
+            return False, "❌ Índice de gladiador inválido"
+
+        gladiador = self.gladiadores[gladiador_idx]
+
+        if not gladiador.puede_luchar():
+            return False, f"❌ {gladiador.nombre} no está disponible (estado: {gladiador.estado})"
+
+        if gladiador.ocupacion == "ocupado":
+            return False, f"❌ {gladiador.nombre} ya está ocupado ({gladiador.razon_ocupacion})"
+
+        if not self.instalaciones:
+            return False, "❌ No hay instalaciones construidas"
+
+        instalacion = self.instalaciones.obtener_por_tipo(instalacion_tipo)
+        if not instalacion or not instalacion.comprada:
+            return False, f"❌ Instalación no disponible o no construida"
+
+        if dias not in (1, 3, 5):
+            return False, "❌ Días de trabajo inválidos (1, 3 o 5)"
+
+        # Marcar como ocupado
+        gladiador.ocupar("trabajo " + instalacion.nombre, dias)
+
+        # Registrar trabajador
+        self.trabajadores_activos.append({
+            "gladiador": gladiador,
+            "instalacion_tipo": instalacion_tipo,
+            "dias_restantes": dias,
+            "dias_totales": dias,
+        })
+
+        return True, f"✅ {gladiador.nombre} enviado a {instalacion.nombre} por {dias} día(s)"
+
+    def obtener_trabajadores_info(self) -> List[Dict]:
+        """Info de trabajadores para mostrar en menú."""
+        info = []
+        for t in self.trabajadores_activos:
+            g = t["gladiador"]
+            inst = self.instalaciones.obtener_por_tipo(t["instalacion_tipo"]) if self.instalaciones else None
+            info.append({
+                "gladiador": g.nombre,
+                "instalacion": inst.nombre if inst else t["instalacion_tipo"],
+                "dias_restantes": t["dias_restantes"],
+                "dias_totales": t["dias_totales"],
+            })
+        return info
         return f"Equipo({len(self.gladiadores)}/{self.barracas.espacios_totales} gladiadores, {self.dinero}g)"
 
 
