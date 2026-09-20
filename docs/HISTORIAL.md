@@ -84,6 +84,29 @@ El juego partía de una base sólida: combate automático por turnos, 5 tipos de
 - **Prerequisito Herrero 2:** coherencia temática (materiales sin forja no sirven).
 - Tests: 19 tests nuevos en `tests/test_instalaciones.py`; suite maestra 30/30 → 51/51.
 
+### 🔨 Fase 3.4 — Herrería Ampliada / Forja (Septiembre 2026)
+
+- **Nuevo módulo `src/forja.py`**: sistema completo de forja de armas y armaduras con rarezas (Común/Especial/Mítica) y 5 Armas Históricas exclusivas de eventos.
+- **8 arquetipos de armas** (daga, espada_corta, espada_larga, tridente, martillo, lanza, hacha, hacha_grande) y **7 arquetipos de armaduras** (tunica, cuero, malla, lorica, placas, lorica_hamata, esquemas).
+- **3 rarezas craftables** con multiplicadores: Común x1.0 (max mejora 3), Especial x2.0 (max mejora 4), Mítica x4.0 (max mejora 5).
+- **5 Armas Históricas** (Falx Dacia, Rhomphaia Tracia, Khopesh Egipcio, Katana Misteriosa, Hacha Dane Nórdica) con efectos únicos: perfora escudos, venganza rival, favor dioses, filo perfecto, furia gigante.
+- **Sistema de mejoras unificado**: % ATK/DEF/HP por rareza (8%/12%/18%), costos cuadráticos (`base × tipo × nivel²`), durabilidad -5% por mejora.
+- **Reparación de armas y armaduras**: costo proporcional a durabilidad perdida.
+- **Integración en Herrero (`src/facilities.py`)**: métodos `forjar_arma()`, `forjar_armadura()`, `mejorar_arma()`, `mejorar_armadura()`, `reparar_arma()`, `reparar_armadura()` con validación de nivel de Herrero y materiales.
+- **Persistencia**: serialización/deserialización completa de campos Fase 3.4 (arquetipo, rareza, max_nivel_mejora, nivel_mejora, es_historica, efecto_especial, tipo_armadura, durabilidad).
+- **Tests**: 11 tests nuevos en `tests/test_forja.py`; suite maestra 51/51 → 106/106.
+
+### 🌟 Fase 4 — Árbol de Talentos (Septiembre 2026)
+
+- **Nuevo módulo `src/talents.py`**: 4 ramas (Fuerza, Resistencia, Agilidad, Técnica) × 5 niveles.
+- **1 punto por nivel de gladiador**: al subir de nivel, se otorga 1 punto de talento (`Gladiador.puntos_talento += 1` en `subir_nivel()`).
+- **Habilidades únicas en nivel 5**: Furia Gladiatoria (Fuerza), Escudo Ancestral (Resistencia), Reflejo Táctico (Agilidad), Maestría del Guerrero (Técnica).
+- **Bonus por rama**: Fuerza (+ATK, +CRIT), Resistencia (+DEF, +HP), Agilidad (+SPD, +ESQ), Técnica (+CRIT, +ATK, +XP).
+- **Funciones**: `obtener_bonus_talentos()`, `asignar_talento()`, `puede_asignar()`, `verificar_habilidad_unica()`, `obtener_resumen_talentos()`.
+- **Persistencia**: campos `puntos_talento` y `arbol_talentos` en `serializar_gladiador()` / `deserializar_gladiador()` con defaults para compatibilidad.
+- **Menú de asignación**: `menu_talentos()` en `main.py`.
+- **Tests**: 21 tests nuevos en `tests/test_talents.py`; suite maestra 106/106 → 127/127.
+
 ### ✅ Auditorías y validación global
 
 - 25 archivos Python compilando sin errores, 0 imports rotos, 100% docstrings.
@@ -111,8 +134,10 @@ El juego partía de una base sólida: combate automático por turnos, 5 tipos de
 | **3.1** | Leaderboards globales (3 rankings Top 10 multiusuario, máximos históricos). |
 | **3.2** | Eventos, patricios, honra/redención, 12 eventos, mercado simétrico. |
 | **3.3** | Instalaciones de recursos (Cantera/Granja/Aserradero, trabajo gladiadores, clamp rareza, prereq herrero 2). |
+| **3.4** | Forja ampliada (armas + armaduras, 3 rarezas, 5 históricas, mejoras cuadráticas, durabilidad, reparación). |
+| **4** | **Árbol de Talentos** (4 ramas × 5 niveles, puntos por nivel, habilidades únicas). |
 
-**Próximo:** Fase 3.4 (herrería ampliada/forja) — ver [ROADMAP.md](ROADMAP.md).
+**Próximo:** Fase 5 (Pulido final, v4.0+) — ver [ROADMAP.md](ROADMAP.md).
 
 ---
 

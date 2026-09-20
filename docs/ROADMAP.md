@@ -4,7 +4,7 @@
 
 ---
 
-## 1. Estado actual — Fase 2.2 completa ✅
+## 1. Estado actual — Fase 3.4 completa ✅
 
 Sistemas implementados y funcionales:
 
@@ -15,8 +15,13 @@ Sistemas implementados y funcionales:
 - **Misiones (2.1):** 23 misiones en 4 capas con auto-tracking, notificaciones agregadas y persistencia por usuario.
 - **Facilidades:** Médico progresivo (curaciones, revivir, 5 niveles) y Herrero 2.0 (mejora % por tier, durabilidad).
 - **Persistencia:** partidas y misiones en JSON multiusuario, guardado automático.
+- **Leaderboards (3.1):** 3 rankings globales Top 10 (victorias, fortuna, nivel) con máximos históricos multiusuario.
+- **Eventos, Patricios y Honra (3.2):** 5–7 patricios, afinidad/rivalidad, honra 0–100, 12 eventos, mercado simétrico, redención.
+- **Instalaciones de Recursos (3.3):** 3 instalaciones (Cantera/Granja/Aserradero) con trabajo de gladiadores, clamp de rarezas, ingreso pasivo.
+- **Forja Ampliada (3.4):** Construcción de armas y armaduras (8 arquetipos arma + 7 arquetipos armadura, 3 rarezas craftables), 5 armas históricas exclusivas, mejoras con costos cuadráticos y durabilidad, reparación de armas y armaduras.
+- **Árbol de Talentos (4):** 4 ramas (Fuerza/Resistencia/Agilidad/Técnica) × 5 niveles, 1 punto por nivel de gladiador, habilidades únicas en nivel 5, menú de asignación.
 
-**Tests:** suite `tests/run_tests_new.py` — 51/51 pasando.
+**Tests:** suite `tests/run_tests_new.py` — 127/127 pasando.
 
 ---
 
@@ -32,6 +37,9 @@ Sistemas implementados y funcionales:
 | Herrero 2.0 | ✅ | Mejoras %, durabilidad |
 | 3.1 — Leaderboards | ✅ | 3 rankings globales Top 10, máximos históricos |
 | 3.2 — Eventos, Patricios y Honra | ✅ | 5–7 patricios, honra/redención, 12 eventos, mercado simétrico |
+| 3.3 — Instalaciones de Recursos | ✅ | 3 instalaciones, trabajo gladiadores, clamp rareza, prereq herrero 2 |
+| 3.4 — Herrería Ampliada | ✅ | Forja armas/armaduras (8+7 arquetipos), 5 históricas, mejoras cuadráticas, reparación |
+| **4 — Árbol de Talentos** | ✅ | 4 ramas × 5 niveles, puntos por nivel, habilidades únicas |
 
 *(Cronología detallada en [HISTORIAL.md](HISTORIAL.md))*
 
@@ -67,23 +75,23 @@ Sistemas implementados y funcionales:
 - **Ocupación:** Reusa `ocupar()`/`pasar_dia()` existente · Persistencia en save del usuario
 - Tests: 19 tests nuevos en `tests/test_instalaciones.py` (suite: 51/51)
 
-### 3.4 — Herrería: Construcción y Mejora (~4h)
-- **Construcción (forja):** recetas de armas y armaduras desde materiales + dinero, desbloqueadas por nivel de Herrero
-- **Mejora de armaduras:** extender el sistema actual (solo armas) a armaduras con % DEF/HP, durabilidad y costos cuadráticos
-- Reparación de armaduras; más recetas/materiales ampliables
-
-Cada sistema incluye su suite de tests.
+### 3.4 — Herrería: Construcción y Mejora ✅ COMPLETA
+- **Construcción (forja):** 8 arquetipos de armas (daga, espada_corta, espada_larga, tridente, martillo, lanza, hacha, hacha_grande) y 7 arquetipos de armaduras (tunica, cuero, malla, lorica, placas, lorica_hamata, esquemas) con 3 rarezas craftables (Común/Especial/Mítica) + 5 Armas Históricas exclusivas de eventos.
+- **Mejora de armas y armaduras:** sistema unificado con % ATK/DEF/HP por rareza (Común 8%, Especial 12%, Mítica 18%), costos cuadráticos (`base × tipo × nivel²`), durabilidad -5% por mejora.
+- **Reparación:** armas y armaduras reparables con costo proporcional a durabilidad perdida.
+- **Integración completa:** menú Herrero en main.py con opciones forjar/ mejor/ reparar para armas y armaduras, prerequisitos de nivel de Herrero por rareza.
+- **Tests:** 11 tests nuevos en `tests/test_forja.py` (suite: 106/106)
 
 ---
 
-## 4. Fase 4 — Árbol de Talentos
+## 4. Fase 4 — Árbol de Talentos ✅ COMPLETA
 
 Sistema aislado y ampliable (~4h):
 
 - `src/talents.py`: 4 ramas (Fuerza, Resistencia, Agilidad, Técnica) × 5 niveles
 - 1 punto por nivel de gladiador; habilidad única en nivel 5 de cada rama
-- Integración con `subir_nivel()`, persistencia, menú de asignación
-- Extensible luego: más ramas, prestigio/reset, sinergias entre ramas
+- Integración con `subir_nivel()` (+1 punto por nivel), persistencia, menú de asignación (`menu_talentos` en `main.py`)
+- Tests: 21 tests nuevos en `tests/test_talents.py`; suite maestra 106/106 → 127/127
 
 ---
 

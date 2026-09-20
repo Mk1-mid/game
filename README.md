@@ -1,6 +1,6 @@
 # 🏛️ SANGRE POR FORTUNA - Juego de Gladiadores
 
-**Versión:** 2.2 (Fase 2.2 - Sistema de Habilidades Pulido) | **Estado:** ✅ Funcional
+**Versión:** 4.0 (Fase 4 — Árbol de Talentos) | **Estado:** ✅ Funcional
 
 Simulador de gladiadores en la antigua Roma escrito en **Python puro** (consola). Gestiona un equipo de hasta 6 gladiadores: reclútalos, entrénalos, equípalos, cúralos y envíalos a combatir en la arena por dinero y experiencia.
 
@@ -31,7 +31,8 @@ python tests/run_tests_new.py
 
 ## 🎮 Características
 
-- **Sistema de progresión:** XP y niveles logarítmicos (`XP = 100 * 1.1^nivel`), stats que escalan con rendimientos decrecientes
+- **Sistema de progresión:** XP y niveles logarítmicos (`XP = 100 * 1.1^nivel`), stats que escalan con rendimientos decrecientes, **puntos de talento** por nivel
+- **Árbol de talentos:** 4 ramas (Fuerza, Resistencia, Agilidad, Técnica) × 5 niveles, habilidades únicas en nivel 5
 - **Sistema de equipo:** hasta 6 gladiadores con estado, ocupación (entrenamiento/curación) e historial propios
 - **5 arquetipos:** Murmillo, Retiarius, Secutor, Thraex, Hoplomachus — cada uno con 5 habilidades propias
 - **Combate:** automático por turnos con habilidades, triggers y dificultades de arena (Novato → Legendaria)
@@ -95,6 +96,7 @@ game/
 4. **Combate** en la arena por dinero y XP (elige dificultad)
 5. **Cura** a tus heridos en el médico y **mejora** armas en el herrero
 6. **Completa misiones** y sube en el ranking de ligas
+7. **Asigna talentos** para especializar a tus gladiadores (4 ramas × 5 niveles)
 
 ---
 

@@ -20,19 +20,27 @@ class Item:
 
 
 class Weapon(Item):
-    """Arma que afecta ataque, agilidad y crítico."""
+    """Arma que afecta ataque, agilidad y critico."""
     def __init__(self, nombre, attack=0, agilidad=0, peso=0, critico_bonus=0, tier=1, str_requirement=10):
         super().__init__(nombre)
         self.attack = attack
         self.agilidad = agilidad
         self.peso = peso
         self.critico_bonus = critico_bonus
-        self.tier = tier  # Tier 1-4 (1: básica, 4: legendaria)
+        self.tier = tier  # Tier 1-4 (1: basica, 4: legendaria)
         self.str_requirement = str_requirement  # Fuerza necesaria para usar
         self.nivel_mejora = 0  # Nivel de mejora del Herrero
 
+        # === Fase 3.4: Forja Ampliada ===
+        self.arquetipo = "desconocido"    # "daga", "espada_corta", "espada_larga", "tridente", 
+                                          # "martillo", "lanza", "hacha", "hacha_grande", "desconocido"
+        self.rareza = "comun"             # "comun" | "especial" | "mitica" | "historica"
+        self.max_nivel_mejora = 3         # segun rareza: comun=3, especial=4, mitica=5, historica=0
+        self.es_historica = False         # True para armas historicas (no mejorables, no reparables)
+        self.efecto_especial = None       # dict con efecto especial para armas historicas
+
     def __repr__(self):
-        return f"Weapon({self.nombre}, ATK:{self.attack}, AGI:{self.agilidad}, PESO:{self.peso}kg, CRI:{self.critico_bonus}%)"
+        return f"Weapon({self.nombre}, ATK:{self.attack}, AGI:{self.agilidad}, PESO:{self.peso}kg, CRI:{self.critico_bonus}%, Arq:{self.arquetipo}, Rareza:{self.rareza}, NvMej:{self.nivel_mejora}/{self.max_nivel_mejora})"
 
 
 class Armor(Item):
@@ -48,11 +56,11 @@ class Armor(Item):
 
 
 class Potion(Item):
-    """Poción consumible con efecto temporal o permanente."""
+    """Pocion consumible con efecto temporal o permanente."""
     def __init__(self, nombre, tipo, valor):
         """
         Args:
-            nombre: Nombre de la poción
+            nombre: Nombre de la pocion
             tipo: "heal" (cura HP), "attack" (ATK temporal), "defense" (DEF temporal), "speed" (SPD temporal)
             valor: Cantidad del efecto
         """
@@ -61,17 +69,17 @@ class Potion(Item):
         self.valor = valor
     
     def usar(self, personaje):
-        """Aplica el efecto de la poción al personaje."""
+        """Aplica el efecto de la pocion al personaje."""
         if self.tipo == "heal":
             personaje.hp_actual = min(personaje.hp, personaje.hp_actual + self.valor)
-            return f"✓ {personaje.nombre} se curó {self.valor} HP (ahora: {personaje.hp_actual}/{personaje.hp})"
+            return f"[OK] {personaje.nombre} se curo {self.valor} HP (ahora: {personaje.hp_actual}/{personaje.hp})"
         elif self.tipo == "attack":
-            return f"⚔️  {personaje.nombre} ganó +{self.valor} ATK (efecto temporal)"
+            return f"[SWORD]  {personaje.nombre} gano +{self.valor} ATK (efecto temporal)"
         elif self.tipo == "defense":
-            return f"🛡️  {personaje.nombre} ganó +{self.valor} DEF (efecto temporal)"
+            return f"🛡️  {personaje.nombre} gano +{self.valor} DEF (efecto temporal)"
         elif self.tipo == "speed":
-            return f"⚡ {personaje.nombre} ganó +{self.valor} SPD (efecto temporal)"
-        return "❌ Poción inválida"
+            return f"⚡ {personaje.nombre} gano +{self.valor} SPD (efecto temporal)"
+        return "[FAIL] Pocion invalida"
     
     def __repr__(self):
         return f"Potion({self.nombre}, tipo:{self.tipo}, valor:{self.valor})"
@@ -96,8 +104,8 @@ class Material(Item):
         return f"Material({self.nombre}, {self.rareza}, {self.valor}g)"
 
 
-# Catálogo de materiales: nombre -> (rareza, valor base)
-# La cantera/granja/aserradero de la Fase 3.3 producirán estos materiales.
+# Catalogo de materiales: nombre -> (rareza, valor base)
+# La cantera/granja/aserradero de la Fase 3.3 produciran estos materiales.
 CATALOGO_MATERIALES = {
     "Mineral de Hierro": ("comun", 20),
     "Mineral Raro": ("especial", 80),
@@ -106,7 +114,7 @@ CATALOGO_MATERIALES = {
     "Cuero Endurecido": ("especial", 70),
     "Piel de Bestia": ("mitica", 280),
     "Madera de Roble": ("comun", 12),
-    "Madera de Ébano": ("especial", 60),
+    "Madera de Ebano": ("especial", 60),
     "Madera Ancestral": ("mitica", 250),
 }
 
@@ -143,7 +151,7 @@ class Character:
 
     @property
     def hp_maximo(self):
-        """Alias del HP máximo (sin armadura) para compatibilidad."""
+        """Alias del HP maximo (sin armadura) para compatibilidad."""
         return self.hp
 
     def agilidad_final(self):
@@ -191,13 +199,13 @@ class Player(Character):
             defense=5,
             speed=10
         )
-        # Progresión del jugador
+        # Progresion del jugador
         self.nivel = 1
         self.xp = 0
 
     def xp_para_siguiente_nivel(self):
         """XP necesario para alcanzar el siguiente nivel (curva suave)."""
-        # Fórmula base: 100 * (1.1 ^ nivel_actual)
+        # Formula base: 100 * (1.1 ^ nivel_actual)
         return int(100 * (1.1 ** self.nivel))
 
     def subir_nivel(self):
@@ -210,10 +218,10 @@ class Player(Character):
         self.speed = round(self.speed * 1.065, 2)
 
     def ganar_xp(self, cantidad):
-        """Añade XP y gestiona subida de nivel. Devuelve True si subió nivel."""
+        """Anade XP y gestiona subida de nivel. Devuelve True si subio nivel."""
         self.xp += int(max(0, cantidad))
         subio = False
-        # Permite subir múltiples niveles si se acumuló suficiente XP
+        # Permite subir multiples niveles si se acumulo suficiente XP
         while self.xp >= self.xp_para_siguiente_nivel():
             self.xp -= self.xp_para_siguiente_nivel()
             self.subir_nivel()
@@ -229,7 +237,7 @@ class Player(Character):
 # ============================================
 
 class Gladiador(Character):
-    """Gladiador individual con progresión y estado independiente."""
+    """Gladiador individual con progresion y estado independiente."""
     
     def __init__(self, nombre, tipo_base, nivel=1):
         """
@@ -247,9 +255,13 @@ class Gladiador(Character):
         self.xp = 0
         
         # NUEVO: Stats principales
-        self.fuerza = 15  # Capacidad de carga + daño
-        self.critico = 12  # Probabilidad de crítico (%)
+        self.fuerza = 15  # Capacidad de carga + dano
+        self.critico = 12  # Probabilidad de critico (%)
         self.esquiva = 8   # Probabilidad de esquiva (%)
+        
+        # === Fase 4: Árbol de Talentos ===
+        self.puntos_talento = 0
+        self.arbol_talentos = {"fuerza": 0, "resistencia": 0, "agilidad": 0, "tecnica": 0}
         
         # Aplicar arquetipos iniciales por tipo
         self._aplicar_arquetipos_tipo()
@@ -262,12 +274,12 @@ class Gladiador(Character):
         self.calcular_stats_finales()
         
         # Estado de salud individual
-        self.hp_actual = self.hp  # Puede ser menor si está herido
+        self.hp_actual = self.hp  # Puede ser menor si esta herido
         self.estado = "sano"  # sano, herido, critico, muerto
         
-        # Ocupación temporal (entrenamiento, curación)
+        # Ocupacion temporal (entrenamiento, curacion)
         self.ocupacion = "disponible"  # disponible, ocupado
-        self.dias_ocupado = 0  # Cuántos días falta para disponible
+        self.dias_ocupado = 0  # Cuantos dias falta para disponible
         self.razon_ocupacion = None  # "entrenamiento", "curacion"
         
         # Historial
@@ -280,9 +292,9 @@ class Gladiador(Character):
         # Mapeo entre tipos de gladiador y arquetipos de habilidades
         arqueotipos_mapping = {
             "Murmillo": "Guerrero",      # Fuerte y defensivo
-            "Retiarius": "Velocista",    # Rápido y ágil
-            "Secutor": "Paladín",        # Balanceado
-            "Thraex": "Asesino",         # Ofensivo y crítico
+            "Retiarius": "Velocista",    # Rapido y agil
+            "Secutor": "Paladin",        # Balanceado
+            "Thraex": "Asesino",         # Ofensivo y critico
             "Hoplomachus": "Tanque",     # Defensivo puro
         }
         
@@ -293,15 +305,15 @@ class Gladiador(Character):
             "esquivas": 0,
             "criticos_recibidos": 0,
             "criticos_propios": 0,
-            "daño_recibido": 0,
+            "dano_recibido": 0,
             "turnos": 0
         }
     
     def _aplicar_arquetipos_tipo(self):
-        """Aplica arquetipos iniciales según tipo de gladiador."""
+        """Aplica arquetipos iniciales segun tipo de gladiador."""
         arquetipos = {
             "Murmillo": {"fuerza": 25, "agilidad": 10},      # Guerrero fuerte
-            "Retiarius": {"fuerza": 12, "agilidad": 22},     # Ágil y rápido
+            "Retiarius": {"fuerza": 12, "agilidad": 22},     # Agil y rapido
             "Secutor": {"fuerza": 18, "agilidad": 15},       # Balanceado
             "Thraex": {"fuerza": 20, "agilidad": 14},        # Ofensivo
             "Hoplomachus": {"fuerza": 16, "agilidad": 12},   # Defensivo
@@ -323,7 +335,8 @@ class Gladiador(Character):
         self.attack = int(self.attack * 1.085)
         self.defense = round(self.defense * 1.075, 2)
         self.agilidad = round(self.agilidad * 1.065, 2)
-        self.fuerza = round(self.fuerza * 1.070, 2)  # NUEVO: Fuerza escala
+        self.fuerza = round(self.fuerza * 1.070, 2)
+        self.puntos_talento += 1  # NUEVO: Fuerza escala
     
     def calcular_stats_finales(self):
         """NUEVO: Calcula stats finales considerando peso del equipo."""
@@ -339,10 +352,10 @@ class Gladiador(Character):
         penalidad_peso = peso_equipo / max(1, self.fuerza * 0.5)
         self.agilidad_efectiva = max(1, self.agilidad - penalidad_peso)
         
-        # CRÍTICO = Fuerza * 0.3 + Agilidad efectiva * 0.4 - Peso * 0.5
+        # CRITICO = Fuerza * 0.3 + Agilidad efectiva * 0.4 - Peso * 0.5
         critico_base = (self.fuerza * 0.3 + self.agilidad_efectiva * 0.4) - (peso_equipo * 0.5)
         
-        # Bonus de crítico del arma
+        # Bonus de critico del arma
         critico_arma = self.weapon.critico_bonus if self.weapon else 0
         self.critico = max(1, round(critico_base + critico_arma, 1))
         
@@ -351,19 +364,19 @@ class Gladiador(Character):
         self.esquiva = max(0, round(esquiva_base, 1))
     
     def ganar_xp(self, cantidad):
-        """Gana XP y maneja subidas automáticas."""
+        """Gana XP y maneja subidas automaticas."""
         self.xp += int(max(0, cantidad))
         subio = False
         while self.xp >= self.xp_para_siguiente_nivel():
             self.xp -= self.xp_para_siguiente_nivel()
             self.subir_nivel()
-            self.calcular_stats_finales()  # Recalcular después de subir
+            self.calcular_stats_finales()  # Recalcular despues de subir
             subio = True
         return subio
     
-    def aplicar_daño(self, daño):
+    def aplicar_dano(self, dano):
         """Reduce HP actual y actualiza estado."""
-        self.hp_actual = max(0, self.hp_actual - daño)
+        self.hp_actual = max(0, self.hp_actual - dano)
         if self.hp_actual == 0:
             self.estado = "muerto"
         elif self.hp_actual < self.hp * 0.25:
@@ -388,13 +401,13 @@ class Gladiador(Character):
             self.estado = "herido"
     
     def ocupar(self, razon, dias):
-        """Marca como ocupado por X días."""
+        """Marca como ocupado por X dias."""
         self.ocupacion = "ocupado"
         self.dias_ocupado = dias
         self.razon_ocupacion = razon
     
     def pasar_dia(self):
-        """Llamado al fin de cada día."""
+        """Llamado al fin de cada dia."""
         if self.dias_ocupado > 0:
             self.dias_ocupado -= 1
             if self.dias_ocupado == 0:
@@ -424,15 +437,15 @@ class Gladiador(Character):
         """Retorna stats formateados con emojis."""
         atk_final = self.ataque_final()
         def_final = self.defensa_final()
-        return f"⚔️  ATK: {atk_final}  │  🛡️  DEF: {def_final}  │  ⚡ SPD: {self.agilidad_efectiva}"
+        return f"[SWORD]  ATK: {atk_final}  │  🛡️  DEF: {def_final}  │  ⚡ SPD: {self.agilidad_efectiva}"
     
     def animacion_nivel_up(self):
-        """Retorna animación de subida de nivel."""
+        """Retorna animacion de subida de nivel."""
         import time
         mensaje = "\n" + "="*50 + "\n"
         mensaje += "        ⭐ ¡SUBISTE DE NIVEL! ⭐\n"
         mensaje += "="*50 + "\n"
-        mensaje += f"        Nivel {self.nivel - 1} → Nivel {self.nivel}\n"
+        mensaje += f"        Nivel {self.nivel - 1} -> Nivel {self.nivel}\n"
         # Mostrar aproximadamente los incrementos
         hp_inc = int(self.hp * 0.095)
         atk_inc = int(self.attack * 0.085)
@@ -466,25 +479,25 @@ class Barracas:
     
     @property
     def proxima_litera_disponible(self):
-        """¿Puedes comprar otra litera? (máx 5 literas = 10 espacios)."""
+        """¿Puedes comprar otra litera? (max 5 literas = 10 espacios)."""
         return self.literas < 5
     
     def comprar_litera(self, dinero):
         """
         Intenta comprar una litera (agrega 2 espacios).
-        Returns: (éxito, dinero_restante, mensaje)
+        Returns: (exito, dinero_restante, mensaje)
         """
         if not self.proxima_litera_disponible:
-            return False, dinero, "❌ Máximo de literas alcanzado (10 espacios)"
+            return False, dinero, "[FAIL] Maximo de literas alcanzado (10 espacios)"
         
         costo = self.costo_proxima_litera
         if dinero < costo:
-            return False, dinero, f"❌ No tienes suficiente dinero ({costo}g)"
+            return False, dinero, f"[FAIL] No tienes suficiente dinero ({costo}g)"
         
         self.literas += 1
         self.espacios_totales += 2
         dinero -= costo
-        return True, dinero, f"✓ Compraste una litera por {costo}g (+2 espacios)"
+        return True, dinero, f"[OK] Compraste una litera por {costo}g (+2 espacios)"
     
     def __repr__(self):
         return f"Barracas({self.literas} literas, {self.espacios_totales} espacios)"
@@ -509,9 +522,9 @@ class Equipo:
         self.materiales = {}         # {"Mineral de Hierro": 3, ...}
         self.habilitado_clandestino = False  # se activa con el "Rumor de soborno"
         self.rumor_ofrecido = False     # el rumor solo se ofrece UNA vez (gancho)
-        self.fama = 0                   # fama pública (sube/baja con desafíos)
+        self.fama = 0                   # fama publica (sube/baja con desafios)
         self.prestamos_pendientes = []  # [{"patricio", "monto", "dias_restantes"}]
-        self.penitencia_fama_dias = 0   # días con fama atada tras penitencia pública
+        self.penitencia_fama_dias = 0   # dias con fama atada tras penitencia publica
 
         # === Fase 3.3: Instalaciones y trabajadores ===
         self.instalaciones = None  # GestorInstalaciones (se crea en main)
@@ -520,35 +533,35 @@ class Equipo:
     # --- Honra (Fase 3.2) ---
 
     def titulo_honra(self):
-        """Título narrativo según honra (bandas sin huecos: 0-100)."""
+        """Titulo narrativo segun honra (bandas sin huecos: 0-100)."""
         if self.honra >= 80:
             return "El Honorable"
         elif self.honra >= 60:
             return "El Respetable"
         elif self.honra >= 40:
-            return None  # zona neutra, sin título
+            return None  # zona neutra, sin titulo
         elif self.honra >= 20:
             return "El Turbio"
         else:
             return "El Corrupto de Roma"  # 0-19
 
     def modificador_mercado(self):
-        """Multiplicador de precios del mercado según honra (Fase 3.2)."""
+        """Multiplicador de precios del mercado segun honra (Fase 3.2)."""
         if self.honra >= 70:
             return 0.90  # -10%: honorables inspiran confianza
         elif self.honra <= 19:
-            return 1.15  # +15%: los mercaderes desconfían
+            return 1.15  # +15%: los mercaderes desconfian
         return 1.0
 
     def modificar_honra(self, delta):
-        """Suma/resta honra manteniendo límites 0-100. Retorna el valor final."""
+        """Suma/resta honra manteniendo limites 0-100. Retorna el valor final."""
         self.honra = max(0, min(100, self.honra + delta))
         return self.honra
 
     def registrar_victoria_limpia(self):
         """
         Victoria en arena oficial: +1 honra (+2 con racha >= 5) y racha +1.
-        Es el "camino lento" de redención: subir honra sin eventos turbios.
+        Es el "camino lento" de redencion: subir honra sin eventos turbios.
         """
         self.racha_victorias_limpias += 1
         ganancia = 2 if self.racha_victorias_limpias >= 5 else 1
@@ -556,8 +569,8 @@ class Equipo:
 
     def registrar_evento_turbio(self, costo_honra):
         """
-        Participación en evento clandestino: baja honra Y reinicia la racha.
-        La racha (no el número de honra) es el compromiso real de redención.
+        Participacion en evento clandestino: baja honra Y reinicia la racha.
+        La racha (no el numero de honra) es el compromiso real de redencion.
         """
         self.racha_victorias_limpias = 0
         return self.modificar_honra(-abs(costo_honra))
@@ -565,7 +578,7 @@ class Equipo:
     # --- Materiales (Fase 3.2) ---
 
     def agregar_material(self, nombre, cantidad=1):
-        """Añade materiales al inventario. Retorna la cantidad total actual."""
+        """Anade materiales al inventario. Retorna la cantidad total actual."""
         if cantidad <= 0:
             return self.materiales.get(nombre, 0)
         self.materiales[nombre] = self.materiales.get(nombre, 0) + cantidad
@@ -578,15 +591,15 @@ class Equipo:
     def consumir_material(self, nombre, cantidad=1):
         """
         Consume materiales del inventario.
-        Retorna (éxito, cantidad_consumida, mensaje) — patrón de 3 valores.
+        Retorna (exito, cantidad_consumida, mensaje) — patron de 3 valores.
         """
         if not self.tiene_material(nombre, cantidad):
             actual = self.materiales.get(nombre, 0)
-            return False, 0, f"❌ Faltan materiales: {nombre} ({actual}/{cantidad})"
+            return False, 0, f"[FAIL] Faltan materiales: {nombre} ({actual}/{cantidad})"
         self.materiales[nombre] -= cantidad
         if self.materiales[nombre] <= 0:
             del self.materiales[nombre]
-        return True, cantidad, f"✓ Usados {cantidad}x {nombre}"
+        return True, cantidad, f"[OK] Usados {cantidad}x {nombre}"
     
     @property
     def espacios_disponibles(self):
@@ -599,19 +612,19 @@ class Equipo:
         return len(self.gladiadores) >= self.barracas.espacios_totales
     
     def agregar_gladiador(self, gladiador):
-        """Añade un gladiador al equipo si hay espacio."""
+        """Anade un gladiador al equipo si hay espacio."""
         if len(self.gladiadores) >= self.barracas.espacios_totales:
-            return False, "❌ Barracas llenas"
+            return False, "[FAIL] Barracas llenas"
         self.gladiadores.append(gladiador)
-        return True, f"✓ {gladiador.nombre} se unió al equipo"
+        return True, f"[OK] {gladiador.nombre} se unio al equipo"
     
     def remover_gladiador(self, indice):
         """Elimina un gladiador del equipo."""
         if 0 <= indice < len(self.gladiadores):
             nombre = self.gladiadores[indice].nombre
             self.gladiadores.pop(indice)
-            return True, f"✓ {nombre} fue removido del equipo"
-        return False, "❌ Índice inválido"
+            return True, f"[OK] {nombre} fue removido del equipo"
+        return False, "[FAIL] Indice invalido"
     
     def calcular_nivel_promedio(self):
         """Nivel promedio del equipo."""
@@ -626,17 +639,17 @@ class Equipo:
         return all(g.estado == "muerto" for g in self.gladiadores)
     
     def seleccionar_luchador(self, indice):
-        """Selecciona qué gladiador pelea ahora."""
+        """Selecciona que gladiador pelea ahora."""
         if 0 <= indice < len(self.gladiadores):
             if self.gladiadores[indice].puede_luchar():
                 self.gladiador_activo = self.gladiadores[indice]
-                return True, f"✓ {self.gladiador_activo.nombre} seleccionado"
+                return True, f"[OK] {self.gladiador_activo.nombre} seleccionado"
             else:
-                return False, f"❌ {self.gladiadores[indice].nombre} no puede luchar"
-        return False, "❌ Índice inválido"
+                return False, f"[FAIL] {self.gladiadores[indice].nombre} no puede luchar"
+        return False, "[FAIL] Indice invalido"
     
     def pasar_dia(self):
-        """Llamado al fin de cada día - todos avanzan recuperación."""
+        """Llamado al fin de cada dia - todos avanzan recuperacion."""
         for gladiador in self.gladiadores:
             gladiador.pasar_dia()
 
@@ -657,15 +670,15 @@ class Equipo:
             if trabajo["dias_restantes"] <= 0:
                 completados.append((i, trabajo))
 
-        # Procesar completados en orden inverso para no romper índices
+        # Procesar completados en orden inverso para no romper indices
         for idx, trabajo in reversed(completados):
             self._finalizar_trabajo(idx, trabajo)
 
     def _finalizar_trabajo(self, idx: int, trabajo: Dict):
         """
-        Procesa la finalización de un trabajo y otorga recompensas.
+        Procesa la finalizacion de un trabajo y otorga recompensas.
         Args:
-            idx: índice en self.trabajadores_activos
+            idx: indice en self.trabajadores_activos
             trabajo: dict con gladiador, instalacion_tipo, dias_totales
         """
         if not self.instalaciones:
@@ -677,7 +690,7 @@ class Equipo:
 
         instalacion = self.instalaciones.obtener_por_tipo(tipo)
         if not instalacion or not instalacion.comprada:
-            # Instalación ya no existe, solo devolver gladiador
+            # Instalacion ya no existe, solo devolver gladiador
             self.trabajadores_activos.pop(idx)
             return
 
@@ -709,7 +722,7 @@ class Equipo:
         else:
             stat_msg = f"+{stat_gain} {stat}"
 
-        # Recalcular stats derivados si cambió fuerza/agilidad
+        # Recalcular stats derivados si cambio fuerza/agilidad
         if stat in ("fuerza", "agilidad"):
             gladiador.calcular_stats_finales()
 
@@ -720,7 +733,7 @@ class Equipo:
 
         # Generar mensaje de retorno
         mats_str = ", ".join(f"{m.nombre} ({m.rareza})" for m in materiales) if materiales else "nada"
-        msg = (f"🎖️ {gladiador.nombre} volvió del trabajo en {instalacion.nombre}: "
+        msg = (f"[MEDAL] {gladiador.nombre} volvio del trabajo en {instalacion.nombre}: "
                f"{len(materiales)} materiales ({mats_str}), +{xp} XP, {stat_msg}")
         if msg_herida:
             msg += f" | {msg_herida}"
@@ -732,39 +745,39 @@ class Equipo:
 
     def asignar_trabajador(self, gladiador_idx: int, instalacion_tipo: str, dias: int) -> Tuple[bool, str]:
         """
-        Asigna un gladiador a trabajar en una instalación.
+        Asigna un gladiador a trabajar en una instalacion.
 
         Args:
-            gladiador_idx: índice en self.gladiadores
+            gladiador_idx: indice en self.gladiadores
             instalacion_tipo: "cantera", "granja", "aserradero"
             dias: 1, 3, o 5
 
         Returns:
-            (éxito, mensaje)
+            (exito, mensaje)
         """
         if not self.instalaciones:
-            return False, "❌ No hay instalaciones disponibles"
+            return False, "[FAIL] No hay instalaciones disponibles"
 
         if gladiador_idx < 0 or gladiador_idx >= len(self.gladiadores):
-            return False, "❌ Índice de gladiador inválido"
+            return False, "[FAIL] Indice de gladiador invalido"
 
         gladiador = self.gladiadores[gladiador_idx]
 
         if not gladiador.puede_luchar():
-            return False, f"❌ {gladiador.nombre} no está disponible (estado: {gladiador.estado})"
+            return False, f"[FAIL] {gladiador.nombre} no esta disponible (estado: {gladiador.estado})"
 
         if gladiador.ocupacion == "ocupado":
-            return False, f"❌ {gladiador.nombre} ya está ocupado ({gladiador.razon_ocupacion})"
+            return False, f"[FAIL] {gladiador.nombre} ya esta ocupado ({gladiador.razon_ocupacion})"
 
         if not self.instalaciones:
-            return False, "❌ No hay instalaciones construidas"
+            return False, "[FAIL] No hay instalaciones construidas"
 
         instalacion = self.instalaciones.obtener_por_tipo(instalacion_tipo)
         if not instalacion or not instalacion.comprada:
-            return False, f"❌ Instalación no disponible o no construida"
+            return False, f"[FAIL] Instalacion no disponible o no construida"
 
         if dias not in (1, 3, 5):
-            return False, "❌ Días de trabajo inválidos (1, 3 o 5)"
+            return False, "[FAIL] Dias de trabajo invalidos (1, 3 o 5)"
 
         # Marcar como ocupado
         gladiador.ocupar("trabajo " + instalacion.nombre, dias)
@@ -777,10 +790,10 @@ class Equipo:
             "dias_totales": dias,
         })
 
-        return True, f"✅ {gladiador.nombre} enviado a {instalacion.nombre} por {dias} día(s)"
+        return True, f"[OK] {gladiador.nombre} enviado a {instalacion.nombre} por {dias} dia(s)"
 
     def obtener_trabajadores_info(self) -> List[Dict]:
-        """Info de trabajadores para mostrar en menú."""
+        """Info de trabajadores para mostrar en menu."""
         info = []
         for t in self.trabajadores_activos:
             g = t["gladiador"]
@@ -796,11 +809,11 @@ class Equipo:
 
 
 # ============================================
-# CLASES DE ENEMIGOS BÁSICOS (Heredadas)
+# CLASES DE ENEMIGOS BASICOS (Heredadas)
 # ============================================
 
 class EnemyBasic(Character):
-    """Enemigo básico estándar."""
+    """Enemigo basico estandar."""
     
     def __init__(self):
         super().__init__(
@@ -812,7 +825,7 @@ class EnemyBasic(Character):
 
 
 class EnemyChampion(Character):
-    """Enemigo campeón - versión mejorada."""
+    """Enemigo campeon - version mejorada."""
     
     def __init__(self):
         super().__init__(
@@ -831,7 +844,7 @@ from enum import Enum
 from datetime import datetime
 
 class Liga(Enum):
-    """Categorías de liga."""
+    """Categorias de liga."""
     BRONCE = "Bronce"      # 0-99 puntos
     PLATA = "Plata"        # 100-249 puntos
     ORO = "Oro"            # 250-499 puntos
@@ -854,7 +867,7 @@ class CombateHistorial:
         self.fecha = datetime.now()
     
     def __repr__(self):
-        resultado = "✓" if self.victoria else "✗"
+        resultado = "[OK]" if self.victoria else "✗"
         return f"{resultado} {self.nombre_gladiador} vs {self.nombre_enemigo} ({self.dificultad}) - {self.puntos_ganados}pts"
 
 
@@ -867,7 +880,7 @@ class SistemaLigas:
     
     def registrar_combate(self, gladiador, nombre_enemigo, dificultad, victoria):
         """Registra un combate y actualiza ranking."""
-        # Calcular puntos ganados según dificultad y resultado
+        # Calcular puntos ganados segun dificultad y resultado
         puntos_base = {
             "🟢 NOVATO": 10,
             "🟡 NORMAL": 20,
@@ -877,7 +890,7 @@ class SistemaLigas:
         
         puntos = puntos_base.get(dificultad, 0)
         if not victoria:
-            puntos = max(5, puntos // 2)  # Mínimo 5 puntos por derrota
+            puntos = max(5, puntos // 2)  # Minimo 5 puntos por derrota
         
         xp_ganados = 50 if victoria else 25
         dinero_ganado = 100 if victoria else 0
@@ -915,13 +928,13 @@ class SistemaLigas:
         else:
             stats["derrotas"] += 1
         
-        # Actualizar liga según puntos
+        # Actualizar liga segun puntos
         stats["liga"] = self._calcular_liga(stats["puntos"])
         
         return puntos, xp_ganados, dinero_ganado
     
     def _calcular_liga(self, puntos):
-        """Calcula la liga según puntos."""
+        """Calcula la liga segun puntos."""
         if puntos >= 500:
             return Liga.LEYENDA
         elif puntos >= 250:
@@ -970,7 +983,7 @@ class SistemaLigas:
         if nombre_gladiador:
             historial = [c for c in historial if c.nombre_gladiador == nombre_gladiador]
         
-        return historial[-limite:]  # Últimos N combates
+        return historial[-limite:]  # Ultimos N combates
     
     def generar_reporte_estadisticas(self, nombre_gladiador):
         """Genera reporte completo de un gladiador."""
@@ -998,7 +1011,7 @@ class SistemaLigas:
         return f"SistemaLigas(gladiadores: {len(self.ranking)}, combates: {len(self.historial_combates)})"
 
 # ============================================
-# FASE 4: SISTEMA DE TORNEOS Y LIGAS AUTOMÁTICAS
+# FASE 4: SISTEMA DE TORNEOS Y LIGAS AUTOMATICAS
 # ============================================
 
 from datetime import datetime, timedelta
@@ -1021,7 +1034,7 @@ class Emparejamiento:
     
     def __repr__(self):
         if self.completado:
-            return f"Ronda {self.numero_ronda}: {self.participante1} vs {self.participante2} → ✓ {self.ganador}"
+            return f"Ronda {self.numero_ronda}: {self.participante1} vs {self.participante2} -> [OK] {self.ganador}"
         return f"Ronda {self.numero_ronda}: {self.participante1} vs {self.participante2} (pendiente)"
 
 
@@ -1038,8 +1051,8 @@ class Torneo:
         self._generar_brackets()
     
     def _generar_brackets(self):
-        """Genera el sistema de brackets (árbol de eliminación directa)."""
-        # Si no es potencia de 2, agregamos "byes" (avances automáticos)
+        """Genera el sistema de brackets (arbol de eliminacion directa)."""
+        # Si no es potencia de 2, agregamos "byes" (avances automaticos)
         n = len(self.participantes)
         if n & (n - 1) != 0:  # No es potencia de 2
             # Calcular siguiente potencia de 2
@@ -1065,7 +1078,7 @@ class Torneo:
                 p2 = participantes_actuales[i + 1] if i + 1 < len(participantes_actuales) else None
                 
                 if p1 is None or p2 is None:
-                    # Uno tiene bye automático, avanza sin jugar
+                    # Uno tiene bye automatico, avanza sin jugar
                     if p1 is None:
                         participantes_actuales[i] = p2
                     # Si ambos None, mantener None
@@ -1098,7 +1111,7 @@ class Torneo:
             # Avanzar ganador a siguiente ronda si existe
             self._avanzar_ganador(ganador_nombre, emparejamiento.numero_ronda)
             
-            # Verificar si torneo terminó
+            # Verificar si torneo termino
             if self._verificar_finalizado():
                 self.estado = "finalizado"
                 self.ganador = ganador_nombre
@@ -1113,10 +1126,10 @@ class Torneo:
             # Buscar slot disponible en siguiente ronda
             for emparejamiento in siguiente_ronda:
                 if ganador == emparejamiento.participante1 or ganador == emparejamiento.participante2:
-                    return  # Ya está asignado
+                    return  # Ya esta asignado
     
     def _verificar_finalizado(self):
-        """Verifica si todos los emparejamientos están completados."""
+        """Verifica si todos los emparejamientos estan completados."""
         for ronda in self.rondas:
             for emparejamiento in ronda:
                 if not emparejamiento.completado:
@@ -1144,7 +1157,7 @@ class Torneo:
 
 
 class Temporada:
-    """Una temporada de ligas automáticas (puntos reseteables)."""
+    """Una temporada de ligas automaticas (puntos reseteables)."""
     
     def __init__(self, numero, fecha_inicio):
         self.numero = numero
@@ -1160,7 +1173,7 @@ class Temporada:
 
 
 class LigasAutomaticas:
-    """Gestiona temporadas automáticas de ligas con resets."""
+    """Gestiona temporadas automaticas de ligas con resets."""
     
     def __init__(self):
         self.temporada_actual = 1
@@ -1188,7 +1201,7 @@ class LigasAutomaticas:
         return self.ranking_temporal.get(nombre_gladiador, 0)
     
     def obtener_liga_temporada(self, nombre_gladiador):
-        """Obtiene liga según puntos de temporada actual."""
+        """Obtiene liga segun puntos de temporada actual."""
         puntos = self.obtener_puntos_temporada(nombre_gladiador)
         if puntos >= 500:
             return Liga.LEYENDA
@@ -1220,13 +1233,13 @@ class LigasAutomaticas:
             recompensas["dinero"] = 100
         elif liga == Liga.PLATA:
             recompensas["dinero"] = 250
-            recompensas["items"] = ["Poción de Vida x2"]
+            recompensas["items"] = ["Pocion de Vida x2"]
         elif liga == Liga.ORO:
             recompensas["dinero"] = 500
-            recompensas["items"] = ["Poción de Vida x5", "Mineral Raro x1"]
+            recompensas["items"] = ["Pocion de Vida x5", "Mineral Raro x1"]
         elif liga == Liga.LEYENDA:
             recompensas["dinero"] = 1000
-            recompensas["items"] = ["Poción de Vida x10", "Mineral Raro x3", "Equipo Legendario"]
+            recompensas["items"] = ["Pocion de Vida x10", "Mineral Raro x3", "Equipo Legendario"]
         
         return recompensas
     
